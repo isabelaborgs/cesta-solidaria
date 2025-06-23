@@ -1,0 +1,22 @@
+﻿@model app.Models.OpcaoAgendamentoSolicit
+@using app.Enums
+@using app.Extensions
+
+<tr class="agendamento-row" data-clientid="@Model.ClientId">
+    @{
+        var stringDia = Model.DiaSemana;
+        DiaDaSemana enumDia = (DiaDaSemana)Enum.Parse(typeof(DiaDaSemana), stringDia);
+    }
+
+    <td>@enumDia.GetDisplayName()</td>
+    <td>@Model.HorarioInicio.ToString(@"hh\:mm") - @Model.HorarioFim.ToString(@"hh\:mm")</td>
+    <td>
+        <button type="button" class="btn btn-danger" onclick="this.closest('tr').remove()">Remover</button>
+
+        <input type="hidden" name="agendamentosSolicitacao[@Model.ClientId].DiaSemana" value="@Model.DiaSemana" />
+        <input type="hidden" name="agendamentosSolicitacao[@Model.ClientId].HorarioInicio" value="@Model.HorarioInicio" />
+        <input type="hidden" name="agendamentosSolicitacao[@Model.ClientId].HorarioFim" value="@Model.HorarioFim" />
+        <input type="hidden" name="agendamentosSolicitacao[@Model.ClientId].ClientId" value="@Model.ClientId" />
+        <input type="hidden" name="agendamentosSolicitacao.Index" value="@Model.ClientId" />
+    </td>
+</tr>

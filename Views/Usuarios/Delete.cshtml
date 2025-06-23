@@ -1,0 +1,26 @@
+﻿@model app.Models.Usuario
+
+<div class="wrapper-delete row justify-content-center">
+    <div class="container-delete col-8 col-md-7 col-lg-5 col-xl-4">
+        <h3 class="header-delete">
+            Tem certeza de que deseja excluir sua conta?
+        </h3>
+        <form asp-action="Delete" class="form-delete row">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group col-12">
+                <label asp-for="Senha" class="control-label default-label">
+                    Digite sua senha novamente para confirmar:
+                </label>
+                <input asp-for="Senha" class="form-control" />
+                <span asp-validation-for="Senha" class="text-danger"></span>
+                <div class="mensagem-erro">
+                    @ViewBag.Message
+                </div>
+            </div>
+            <div class="grupo-btn">
+                <input type="submit" class="btn btn-danger" id="btnDelete" value="Excluir conta" />
+                <a class="btn btn-outline-secondary opcao-cancelar" asp-action="Details">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+﻿@model app.Models.UsuarioOng
+
+@{
+    ViewData["Title"] = "Cadastro";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="wrapper-user wrapper-cadastro-user col-lg-8 col-xl-7">
+        <div class="header-user header-cadastro-user">
+            <h1 class="titulo-cadastro-user">
+                Cadastro de ONG
+            </h1>
+            <h4 class="descricao-cadastro-user">
+                Receba doações de alimentos não perecíveis e cestas básicas para redistribuição
+            </h4>
+        </div>
+
+        <div class="container-form-user container-form-cadastro-user align-items-center">
+            <form asp-action="CreateOng" class="form-user form-cadastro-user row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group col-12">
+                    <label asp-for="Nome" class="control-label default-label">Nome da ONG</label>
+                    <input asp-for="Nome" class="form-control" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12">
+                    <label asp-for="RazaoSocial" class="control-label default-label">Razão Social</label>
+                    <input asp-for="RazaoSocial" class="form-control" />
+                    <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Cnpj" class="control-label default-label">CNPJ</label>
+                    <input asp-for="Cnpj" class="form-control" placeholder="Digite apenas números" />
+                    <span asp-validation-for="Cnpj" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Telefone" class="control-label default-label">Telefone comercial</label>
+                    <input asp-for="Telefone" class="form-control" placeholder="Digite apenas números" />
+                    <span asp-validation-for="Telefone" class="text-danger"></span>
+                </div>
+
+                <partial name="_FormUsuarioPartial" model="@Model" />
+
+                <div class="form-group col-12">
+                    <input type="submit" value="Concluir cadastro" class="btn btn-primary-app concluir-cadastro-user" />
+                </div>
+            </form>
+            <div class="opcao-fazer-login">
+                Já tem uma conta?
+                <a asp-controller="Usuarios" asp-action="Login" class="link-app">Fazer login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

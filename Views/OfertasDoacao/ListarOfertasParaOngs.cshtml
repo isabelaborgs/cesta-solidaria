@@ -1,0 +1,81 @@
+@model List<app.Models.OfertaDoacao>
+@using app.Enums
+@using app.Extensions
+
+<h1 class="page-title">
+    Ofertas de doação disponíveis para sua ONG
+</h1>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row cards-doacoes">
+        @foreach (var oferta in Model)
+        {
+            <div class="col-md-6 col-xl-4">
+                <div class="card card-doacao shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2">
+                            @(oferta.IsCestaCompleta ? "Oferta de Cestas Completas" : "Oferta de Itens Não Perecíveis")
+                        </h5>
+                        <h6 class="card-subtitle pb-3 mb-3 border-bottom">
+                            @oferta.UsuarioDoador?.Nome
+                        </h6>
+                        <ul>
+                            @if (!oferta.IsCestaCompleta && oferta.ItensOferta?.Any() == true)
+                            {
+                                <li>
+                                    <i class="bi bi-list-task"></i>
+                                    @{
+                                        var itensAgrupados = oferta.ItensOferta
+                                        .GroupBy(i => i.Alimento)
+                                        .Select(g => $"{g.Key.GetDisplayName()} ({g.Sum(x => x.QtdeItem)})")
+                                        .ToList();
+
+                                        var listaFormatada = string.Join(", ", itensAgrupados);
+                                    }
+                                    @Html.Raw(listaFormatada)
+                                </li>
+                            }
+
+                            @if (oferta.IsCestaCompleta)
+                            {
+                                <li>
+                                    <i class="bi bi-box2-heart"></i>
+                                    @oferta.QtdeCestas
+                                    <span>@(oferta.QtdeCestas == 1 ? "cesta" : "cestas")</span>
+                                </li>
+                            }
+
+                            <li>
+                                <i class="bi bi-truck"></i>
+                                @oferta.TipoTransporte
+                            </li>
+                            <li>
+                                <i class="bi bi-geo-alt"></i>
+                                @oferta.UsuarioDoador?.Cidade, @oferta.UsuarioDoador?.Estado
+                            </li>
+                        </ul>
+                            <button class="btn btn-primary-outline-app" data-bs-toggle="modal" data-bs-target="#detalhes-oferta-@oferta.Id">Ver detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="detalhes-oferta-@oferta.Id" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <partial name="_DetalhesParaOngPartial" model="oferta" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <h5>Não há ofertas de doação disponíveis para a sua localização no momento.</h5>
+}

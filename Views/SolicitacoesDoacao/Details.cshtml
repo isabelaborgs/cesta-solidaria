@@ -1,0 +1,81 @@
+﻿@model app.Models.SolicitacaoDoacao
+@using app.Models
+@using app.Enums
+@using app.Extensions
+@using System.ComponentModel.DataAnnotations
+
+@{
+    ViewData["Title"] = "Detalhes da Solicitação de Doação";
+}
+
+<h1 class="page-title">Detalhes da Solicitação de Doação</h1>
+
+<div class="row justify-content-center">
+    <div class="container-doacao col-lg-8 col-xl-6">
+        <dl class="row">
+            <dt class="col-sm-4">Nome da ONG</dt>
+            <dd class="col-sm-8">@Model.UsuarioOng?.Nome</dd>
+
+            <dt class="col-sm-4">Data da Solicitação</dt>
+            <dd class="col-sm-8">@Model.DataSolicitacao.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">@Model.Status</dd>
+
+            @if (Model.IsCestaCompleta)
+            {
+                <dt class="col-sm-4">Tipo de Solicitação</dt>
+                <dd class="col-sm-8">Cesta completa</dd>
+
+                <dt class="col-sm-4">Quantidade de cestas</dt>
+                <dd class="col-sm-8">@Model.QtdeCestas</dd>
+            }
+            else
+            {
+                <dt class="col-sm-4">Tipo de Solicitação</dt>
+                <dd class="col-sm-8">Itens não pereciveis</dd>
+
+                <dt class="col-sm-4">Itens solicitados</dt>
+                <dd class="col-sm-8">
+                    <ul>
+                        @foreach (var item in Model.ItensSolicitacao)
+                        {
+                            <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                        }
+                    </ul>
+                </dd>
+            }
+
+            <dt class="col-sm-4">Tipo de transporte</dt>
+            <dd class="col-sm-8">@Model.TipoTransporte.GetDisplayName()</dd>
+
+            <dt class="col-sm-4">Agendamentos</dt>
+            <dd class="col-sm-8">
+                @if (Model.AgendamentosSolicitacao?.Any() == true)
+                {
+                    <ul>
+                        @foreach (var agendamento in Model.AgendamentosSolicitacao)
+                        {
+                            var stringDia = agendamento.DiaSemana;
+                            DiaDaSemana enumDia = (DiaDaSemana)Enum.Parse(typeof(DiaDaSemana), stringDia);
+                            <li>@enumDia.GetDisplayName() - das @agendamento.HorarioInicio.ToString(@"hh\:mm") até @agendamento.HorarioFim.ToString(@"hh\:mm")</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <em>Não informado</em>
+                }
+            </dd>
+        </dl>
+        <div class="row grupo-btn">
+            <div class="col-6 order-1">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary-app">Editar</a>
+            </div>
+            <div class="col-6 order-0">
+                <a asp-action="GerenciarSolicitacoes" class="btn btn-secondary-app">Voltar</a>
+            </div>
+        </div>
+    </div>
+</div>
+

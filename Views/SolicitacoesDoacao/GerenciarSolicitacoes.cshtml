@@ -1,0 +1,195 @@
+﻿@using app.Enums
+@using app.Extensions
+@model List<app.Models.SolicitacaoDoacao>
+
+@{
+    ViewData["Title"] = "Gerenciar Solicitações";
+}
+
+<div class="mt-3">
+    <h1 class="page-title">Minhas solicitações de doações</h1>
+
+    <!-- Abas para status -->
+    <ul class="nav nav-tabs" id="tabSolicitacoes" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="pendentes-tab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-selected="true">
+                Pendentes
+                <span class="badge bg-primary">@Model.Count(s => s.Status == Status.Pendente)</span>
+            </a>
+        </li>
+
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="canceladas-tab" data-bs-toggle="tab" href="#canceladas" role="tab" aria-selected="false">
+                Canceladas
+                <span class="badge bg-danger">@Model.Count(s => s.Status == Status.Cancelada)</span>
+            </a>
+        </li>
+
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="concluidas-tab" data-bs-toggle="tab" href="#concluidas" role="tab" aria-selected="false">
+                Concluídas
+                <span class="badge bg-success">@Model.Count(s => s.Status == Status.Concluida)</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Conteúdo das abas -->
+    <div class="tab-content mt-4">
+
+        <!-- Pendentes -->
+        <div class="tab-pane fade show active" id="pendentes" role="tabpanel" aria-labelledby="pendentes-tab">
+            @if (Model.Any(s => s.Status == Status.Pendente))
+            {
+                <div class="row cards-doacoes">
+                @foreach (var solicitacao in Model.Where(s => s.Status == Status.Pendente))
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card card-doacao shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-2">Solicitação @solicitacao.Id</h5>
+                                        <p><strong>ONG:</strong> @solicitacao.UsuarioOng?.Nome</p>
+                                        <p><strong>Data da solicitação:</strong> @solicitacao.DataSolicitacao.ToString("dd/MM/yyyy HH:mm")</p>
+                                        <p><strong>Tipo:</strong> @(solicitacao.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
+
+                                        @if (solicitacao.IsCestaCompleta)
+                                        {
+                                            <p><strong>Quantidade de cestas:</strong> @solicitacao.QtdeCestas</p>
+                                        }
+                                        else if (solicitacao.ItensSolicitacao != null && solicitacao.ItensSolicitacao.Any())
+                                        {
+                                            <strong>Itens:</strong>
+                                            <ul>
+                                                @foreach (var item in solicitacao.ItensSolicitacao)
+                                                {
+                                                    <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                                                }
+                                            </ul>
+                                        }
+
+                                        <div class="d-flex flex-wrap gap-1 acoes-doacao">
+                                            <a class="btn btn-sm btn-primary-app me-1" asp-action="Details" asp-route-id="@solicitacao.Id">Ver detalhes</a>
+                                            <a class="btn btn-sm btn-primary-outline-app me-1" asp-action="Edit" asp-route-id="@solicitacao.Id">Editar</a>
+                                            <a class="btn btn-sm btn-secondary-app" asp-action="Cancelar" asp-route-id="@solicitacao.Id">Cancelar</a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Você não tem solicitações pendentes no momento.</p>
+            }
+        </div>
+
+        <!-- Canceladas -->
+        <div class="tab-pane fade" id="canceladas" role="tabpanel" aria-labelledby="canceladas-tab">
+            @if (Model.Any(s => s.Status == Status.Cancelada))
+            {
+                <div class="row cards-doacoes">
+                    @foreach (var solicitacao in Model.Where(s => s.Status == Status.Cancelada))
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card card-doacao shadow-sm">
+                                <div class="card-body">
+                                    <h5>Solicitação @solicitacao.Id</h5>
+                                    <p><strong>ONG:</strong> @solicitacao.UsuarioOng?.Nome</p>
+                                    <p><strong>Data da solicitação:</strong> @solicitacao.DataSolicitacao.ToString("dd/MM/yyyy HH:mm")</p>
+                                    <p><strong>Tipo:</strong> @(solicitacao.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
+
+                                    @if (solicitacao.IsCestaCompleta)
+                                    {
+                                        <p><strong>Quantidade de cestas:</strong> @solicitacao.QtdeCestas</p>
+                                    }
+                                    else if (solicitacao.ItensSolicitacao != null && solicitacao.ItensSolicitacao.Any())
+                                    {
+                                        <strong>Itens:</strong>
+                                        <ul>
+                                            @foreach (var item in solicitacao.ItensSolicitacao)
+                                            {
+                                                <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                                            }
+                                        </ul>
+                                    }
+
+                                    <p><strong>Justificativa:</strong> @solicitacao.JustificativaCancelamento</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Você não tem solicitações canceladas.</p>
+            }
+        </div>
+
+        <!-- Concluídas -->
+        <div class="tab-pane fade" id="concluidas" role="tabpanel" aria-labelledby="concluidas-tab">
+            @if (Model.Any(s => s.Status == Status.Concluida))
+            {
+                <div class="row cards-doacoes">
+                    @foreach (var solicitacao in Model.Where(s => s.Status == Status.Concluida))
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card card-doacao shadow-sm">
+                                <div class="card-body">
+                                    <h5>Solicitação @solicitacao.Id</h5>
+                                    <p><strong>ONG:</strong> @solicitacao.UsuarioOng?.Nome</p>
+                                    <p><strong>Data da solicitação:</strong> @solicitacao.DataSolicitacao.ToString("dd/MM/yyyy HH:mm")</p>
+                                    <p><strong>Data de conclusão:</strong> @solicitacao.DataConclusao?.ToString("dd/MM/yyyy HH:mm")</p>
+                                    <p><strong>Tipo:</strong> @(solicitacao.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
+
+                                    @if (solicitacao.IsCestaCompleta)
+                                    {
+                                        <p><strong>Quantidade de cestas:</strong> @solicitacao.QtdeCestas</p>
+                                    }
+                                    else if (solicitacao.ItensSolicitacao != null && solicitacao.ItensSolicitacao.Any())
+                                    {
+                                        <strong>Itens:</strong>
+                                        <ul>
+                                            @foreach (var item in solicitacao.ItensSolicitacao)
+                                            {
+                                                <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Você não tem solicitações concluídas.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Botão fora das abas, sempre visível -->
+    @if (User.IsInRole("ONG"))
+    {
+        <div class="mt-4 text-end">
+            <button class="btn btn-primary-app" data-bs-toggle="modal" data-bs-target="#modalTipoSolicitacao">
+                Solicitar nova doação
+            </button>
+        </div>
+
+        <!-- Modal para escolher o tipo de solicitação -->
+        <div class="modal fade" id="modalTipoSolicitacao" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <partial name="~/Views/SolicitacoesDoacao/_TipoDeSolicitacao.cshtml" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

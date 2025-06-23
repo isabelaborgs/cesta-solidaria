@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewData["Title"] = "Página Inicial";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="wrapper-pagina-inicial">
+    <h1 class="page-title">
+        @(User.IsInRole("ONG") ? 
+                    "Painel da ONG" : 
+                    "Painel do Doador")
+    </h1>
+
+    <div class="container-acoes row justify-content-center">
+        <!-- Ações da ONG -->
+        @if (User.IsInRole("ONG"))
+        {
+            <!--Solicitar doação-->
+            <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <button class="card-acao" data-bs-toggle="modal" data-bs-target="#modalTipoSolicitacao">
+                    <div class="titulo-acao">
+                        <div class="icon-container">
+                            <i class="bi bi-box2-heart"></i>
+                        </div>
+                        <h4>Solicitar uma doação</h4>
+                    </div>
+                    <div class="descricao-acao">
+                        Solicite cestas básicas de alimentos ou itens não perecíveis de doadores
+                    </div>
+                </button>
+
+                <div class="modal fade" id="modalTipoSolicitacao" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header border-0">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <partial name="~/Views/SolicitacoesDoacao/_TipoDeSolicitacao.cshtml" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Gerenciar solicitações-->
+            <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <a asp-controller="SolicitacoesDoacao" asp-action="GerenciarSolicitacoes" class="card-acao">
+                    <div class="titulo-acao">
+                        <div class="icon-container">
+                            <i class="bi bi-table"></i>
+                        </div>
+                        <h4>Minhas solicitações</h4>
+                    </div>
+                    <div class="descricao-acao">
+                        Gerencie as solicitações de doação cadastradas por você
+                    </div>
+                </a>
+            </div>
+
+            <!--Visualizar ofertas disponíveis-->
+            <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <a asp-controller="OfertasDoacao" asp-action="ListarOfertasParaOngs" class="card-acao">
+                    <div class="titulo-acao">
+                        <div class="icon-container">
+                            <i class="bi bi-clock"></i>
+                        </div>
+                        <h4>Ofertas de doação disponíveis</h4>
+                    </div>
+                    <div class="descricao-acao">
+                        Visualize as ofertas de doação disponíveis para sua ONG
+                    </div>
+                </a>
+            </div>
+
+            <!--Gerenciar agendamentos-->
+            <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <a asp-controller="Transacoes" asp-action="ListarAgendamentos" class="card-acao">
+                    <div class="titulo-acao">
+                        <div class="icon-container">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <h4>Doações agendadas</h4>
+                    </div>
+                    <div class="descricao-acao">
+					    Gerencie as doações agendadas para entrega
+                    </div>
+                </a>
+            </div>
+        }
+
+        else if (User.IsInRole("Doador"))
+        {
+            <!--Oferecer uma doação-->
+            <div class="col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <button class="card-acao" data-bs-toggle="modal" data-bs-target="#modalEscolherTipo">
+                    <div class="titulo-acao">
+                        <div class="icon-container">
+                            <i class="bi bi-box2-heart"></i>
+                        </div>
+                        <h4>Oferecer uma doação</h4>
+                    </div>
+                    <div class="descricao-acao">
+                        Ofereça cestas básicas de alimentos ou itens não perecíveis para ONGs
+                    </div>
+                </button>
+
+                <div class="modal fade" id="modalEscolherTipo" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <partial name="~/Views/OfertasDoacao/_TipoDeOferta.cshtml" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Gerenciar solicitações-->
+            <div class="col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <a asp-controller="OfertasDoacao" asp-action="GerenciarOfertas" class="card-acao">
+                    <div class="titulo-acao">
+                        <div class="icon-container">
+                            <i class="bi bi-table"></i><i></i>
+                        </div>
+                        <h4>Minhas ofertas</h4>
+                    </div>
+                    <div class="descricao-acao">
+                        Gerencie as ofertas de doação cadastradas por você
+                    </div>
+                </a>
+            </div>
+
+            <!--Visualizar ofertas disponíveis-->
+            <div class="col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <a asp-controller="SolicitacoesDoacao" asp-action="ListarSolicitacoesParaDoadores" class="card-acao">
+                    <div class="titulo-acao">
+                        <div class="icon-container">
+                            <i class="bi bi-clock"></i>
+                        </div>
+                        <h4>Solicitações de doação disponíveis</h4>
+                    </div>
+                    <div class="descricao-acao">
+                        Visualize as doações solicitadas por ONGs disponíveis para você
+                    </div>
+                </a>
+            </div>
+
+            <!--Gerenciar agendamentos-->
+            <div class="col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <a asp-controller="Transacoes" asp-action="ListarAgendamentos" class="card-acao">
+                    <div class="titulo-acao">
+                        <div class="icon-container">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <h4>Doações agendadas</h4>
+                    </div>
+                    <div class="descricao-acao">
+                        Gerencie as doações agendadas para entrega
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Cesta Solidária</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/app.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div>
+            <header>
+                @* Barra de navegação *@
+                <nav class="navbar navbar-light bg-white border-bottom box-shadow mb-3">
+                    <div class="container-fluid justify-content-between gap-3">
+                        <div class="d-flex gap-3">
+                            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <a class="navbar-brand d-none d-md-flex align-items-center" asp-controller="Home" asp-action="PaginaInicial">
+                                <img class="navbar-logo" src="~/img/logotipo.svg" alt="Logotipo Cesta Solidária" />
+                            </a>
+                        </div>
+                        <a class="navbar-brand d-flex align-items-center d-md-none" asp-controller="Home" asp-action="PaginaInicial">
+                            <img class="navbar-logo-reduzida" src="~/img/icone-logotipo.svg" alt="Logotipo Cesta Solidária" />
+                        </a>
+                        @* Notificações *@
+                        <div class="dropdown navbar-notification">
+                            <button type="button" class="btn position-relative" data-bs-toggle="dropdown" data-bs-target="#listaNotificacoes" aria-expanded="false">
+                                <i class="bi bi-bell-fill"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle d-none">
+                                    <span class="visually-hidden">New alerts</span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="listaNotificacoes">
+                                @* As notificações serão adicionadas aqui via AJAX *@
+                            </ul>
+                        </div>
+                        @* Barra offcanvas *@
+                        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                            <div class="offcanvas-header border-bottom">
+                                <h4 class="offcanvas-title" id="offcanvasNavbarLabel">@User.Identity.Name</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <ul class="navbar-nav flex-grow-1 pe-3">
+                                    <li class="nav-item icon-item">
+                                        <a class="nav-link active" asp-controller="Home" asp-action="PaginaInicial">
+                                            <i class="bi bi-house-door"></i>
+                                            Página Inicial
+                                        </a>
+                                    </li>
+
+                                    @if (User.IsInRole("Doador"))
+                                    {
+                                        <li class="nav-item icon-item dropdown">
+                                            <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi bi-box2-heart"></i>
+                                                Oferecer uma doação
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="OfertasDoacao" asp-action="CriarOferta" asp-route-isCestaCompleta="true">Oferecer cestas completas</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="OfertasDoacao" asp-action="CriarOferta" asp-route-isCestaCompleta="false">Oferecer itens não perecíveis</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="nav-item icon-item">
+                                            <a class="nav-link active" asp-controller="OfertasDoacao" asp-action="GerenciarOfertas">
+                                                <i class="bi bi-table"></i>
+                                                Gerenciar ofertas
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item icon-item">
+                                            <a class="nav-link active" asp-controller="SolicitacoesDoacao" asp-action="ListarSolicitacoesParaDoadores">
+                                                <i class="bi bi-clock"></i>
+                                                Solicitações de doações
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (User.IsInRole("ONG"))
+                                    {
+                                        <li class="nav-item icon-item dropdown">
+
+                                            
+                                            <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi bi-box2-heart"></i>
+                                                Solicitar uma doação
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="SolicitacoesDoacao" asp-action="CriarSolicitacao" asp-route-isCestaCompleta="true">
+                                                        Solicitar cestas completas
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="SolicitacoesDoacao" asp-action="CriarSolicitacao" asp-route-isCestaCompleta="false">
+                                                        Solicitar itens não perecíveis
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+
+                                        <li class="nav-item icon-item">
+                                            <a class="nav-link active" asp-controller="SolicitacoesDoacao" asp-action="GerenciarSolicitacoes">
+                                                <i class="bi bi-table"></i>
+                                                Gerenciar solicitações
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item icon-item">
+                                            <a class="nav-link active" asp-controller="OfertasDoacao" asp-action="ListarOfertasParaOngs">
+                                                <i class="bi bi-clock"></i>
+                                                Ofertas de doações
+                                            </a>
+                                        </li>
+                                    }
+
+                                    <li class="nav-item icon-item">
+
+                                        <a asp-controller="Transacoes" asp-action="ListarAgendamentos" class="nav-link active">
+                                            <i class="bi-calendar-check"></i>
+                                            Gerenciar agendamentos
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item icon-item">
+
+                                        <a asp-controller="Usuarios" asp-action="Details" class="nav-link active">
+                                            <i class="bi bi-person"></i>
+                                            Minha conta
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="offcanvas-footer border-top">
+                                    <a asp-controller="Usuarios" asp-action="Logout" class="navbar-logout">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        SAIR
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="container-fluid content-container">
+                <main role="main">
+
+                    @* Exibe mensagem de sucesso das ações no topo da página *@
+                    @if (TempData["Sucesso"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["Sucesso"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @* Exibe mensagem de erro das ações no topo da página *@
+                    @if (TempData["Erro"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["Erro"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+
+        <footer class="border-top footer-small">
+            <div class="footer-container">
+                <div class="copyright">
+                    <img class="footer-logo" src="~/img/icone-rodape.svg" alt="Logotipo Cesta Solidária" />
+                    &copy; 2025 - Cesta Solidária
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+		$(document).ready(function () {
+			// Carregar notificações
+			$.ajax({
+				url: '@Url.Action("ListarNotificacoes", "Notificacoes")',
+				type: 'GET',
+				success: function (data) {
+					$('#listaNotificacoes').html(data);
+                    verificarNotificacoes();
+				},
+				error: function () {
+					$('#listaNotificacoes').html('<li>Erro ao carregar notificações.</li>');
+				}
+			});
+
+           var notificacoes = $('.notificacao').length;
+            console.log(notificacoes);
+
+            // Marcar notificação como lida
+            $(document).on('click', '.btn-marcar-como-lida', function() {
+                var button = $(this);
+                valorId = parseInt(button.closest('.notificacao').attr('id')); //Id da notificação
+
+                $.ajax({
+                    url: '@Url.Action("MarcarComoLida", "Notificacoes")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(valorId),
+                    success: function(response) {
+                        $('#listaNotificacoes').html(response);
+                        verificarNotificacoes();
+                    },
+                    error: function() {
+                        $('#listaNotificacoes').html('<li class="notificacao">Erro ao carregar notificações.</li>');
+                    }
+                });
+            });
+
+            // Registra notificação como lida ao clicar nela
+            $(document).on('click', '.conteudo-notificacao', function() {
+                valorId = parseInt($(this).closest('.notificacao').attr('id')); //Id da notificação
+
+                $.ajax({
+                    url: '@Url.Action("MarcarComoLida", "Notificacoes")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(valorId),
+                    success: function(response) {
+                        $('#listaNotificacoes').html(response);
+                        verificarNotificacoes();
+                    },
+                    error: function() {
+                        $('#listaNotificacoes').html('<li class="notificacao">Erro ao carregar notificações.</li>');
+                    }
+                });
+            });
+
+            // Marcar todas como lidas
+            $(document).on('click', '#btnLerTodas', function() {
+                $.ajax({
+                    url: '@Url.Action("MarcarTodasComoLidas", "Notificacoes")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    success: function(response) {
+                        $('#listaNotificacoes').html(response);
+                        verificarNotificacoes();
+                    },
+                    error: function() {
+                        $('#listaNotificacoes').html('<li class="notificacao">Erro ao carregar notificações.</li>');
+                    }
+                });
+            });
+
+            // Excluir notificação
+            $(document).on('click', '.btn-excluir-notificacao', function() {
+                var button = $(this);
+                valorId = parseInt(button.closest('.notificacao').attr('id')); //Id da notificação
+
+                $.ajax({
+                    url: '@Url.Action("ExcluirNotificacao", "Notificacoes")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(valorId),
+                    success: function(response) {
+                        $('#listaNotificacoes').html(response);
+                        verificarNotificacoes();
+                    },
+                    error: function() {
+                        $('#listaNotificacoes').html('<li class="notificacao">Erro ao carregar notificações.</li>');
+                    }
+                });
+            });
+
+            // Excluir todas as notificações
+            $(document).on('click', '#btnExcluirTodas', function() {
+                $.ajax({
+                    url: '@Url.Action("ExcluirTodasNotificacoes", "Notificacoes")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    success: function(response) {
+                        $('#listaNotificacoes').html(response);
+                        verificarNotificacoes();
+                    },
+                    error: function() {
+                        $('#listaNotificacoes').html('<li class="notificacao">Erro ao carregar notificações.</li>');
+                    }
+                });
+            });
+
+            function verificarNotificacoes() {
+                if ($('.nao-lida').length > 0) {
+                    $('.rounded-circle').removeClass('d-none');
+                } else {
+                    $('.rounded-circle').addClass('d-none');
+                };
+            }
+		});
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

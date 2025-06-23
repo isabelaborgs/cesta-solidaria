@@ -1,0 +1,15 @@
+﻿@using app.Enums
+@model app.Models.ItemOferta
+
+<tr class="item-row" data-clientid="@Model.ClientId">
+    <td>@Html.DisplayFor(m => m.Alimento)</td>
+    <td>@Html.DisplayFor(m => m.QtdeItem) @Html.DisplayFor(m => m.MedidaItem)</td>
+    <td>
+        <button type="button" class="btn btn-danger btn-sm remover-item">Remover</button>
+        <input type="hidden" name="ItensOferta[@Model.ClientId].Alimento" value="@((int)Model.Alimento)" />
+        <input type="hidden" name="ItensOferta[@Model.ClientId].QtdeItem" value="@Model.QtdeItem" />
+        <input type="hidden" name="ItensOferta[@Model.ClientId].MedidaItem" value="@((int)Model.MedidaItem)" />
+        <input type="hidden" name="ItensOferta[@Model.ClientId].ClientId" value="@Model.ClientId" />
+        <input type="hidden" name="ItensOferta.Index" value="@Model.ClientId" />
+    </td>
+</tr>

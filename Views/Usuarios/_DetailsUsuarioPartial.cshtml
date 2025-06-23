@@ -1,0 +1,35 @@
+﻿@model app.Models.Usuario
+
+<div class="form-group col-12">
+    <div class="container-endereco row">
+        <div class="label-endereco col-12">Endereço</div>
+        <div class="form-group form-floating col-12">
+            <input asp-for="Rua" class="form-control" placeholder="Rua" disabled readonly />
+            <label asp-for="Rua" class="control-label"></label>
+        </div>
+        <div class="form-group form-floating col-sm-3">
+            <input asp-for="Numero" class="form-control" placeholder="Número" disabled readonly />
+            <label asp-for="Numero" class="control-label"></label>
+        </div>
+        <div class="form-group form-floating col-sm-9 col-md-5">
+            <input asp-for="Complemento" class="form-control" placeholder="Complemento" disabled readonly />
+            <label asp-for="Complemento" class="control-label">Complemento</label>
+        </div>
+        <div class="form-group form-floating col-md-4">
+            <input asp-for="Bairro" class="form-control" placeholder="Bairro" disabled readonly />
+            <label asp-for="Bairro" class="control-label"></label>
+        </div>
+        <div class="form-group form-floating col-md-6">
+            <input asp-for="Cidade" class="form-control" placeholder="Cidade" disabled readonly />
+            <label asp-for="Cidade" class="control-label"></label>
+        </div>
+        <div class="form-group form-floating col-md-6">
+            <input asp-for="Estado" class="form-control" placeholder="Estado" disabled readonly />
+            <label asp-for="Estado" class="control-label"></label>
+        </div>
+    </div>
+</div>
+<div class="form-group col-12">
+    <label asp-for="Email" class="control-label default-label">E-mail</label>
+    <input asp-for="Email" class="form-control" disabled readonly />
+</div>

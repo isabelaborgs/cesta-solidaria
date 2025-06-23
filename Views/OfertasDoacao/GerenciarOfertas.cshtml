@@ -1,0 +1,196 @@
+﻿@using app.Enums
+@using app.Extensions
+@model List<app.Models.OfertaDoacao>
+
+@{
+    ViewData["Title"] = "Gerenciar Ofertas";
+}
+
+<div class="mt-5">
+    <h1 class="page-title">Minhas ofertas de doações</h1>
+
+    <!-- Navegação de abas -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="pendentes-tab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="true">
+                Pendentes
+                <span class="badge bg-primary">@Model.Count(o => o.Status == Status.Pendente)</span>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="canceladas-tab" data-bs-toggle="tab" href="#canceladas" role="tab" aria-controls="canceladas" aria-selected="false">
+                Canceladas
+                <span class="badge bg-danger">@Model.Count(o => o.Status == Status.Cancelada)</span>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="concluidas-tab" data-bs-toggle="tab" href="#concluidas" role="tab" aria-controls="concluidas" aria-selected="false">
+                Concluídas
+                <span class="badge bg-success">@Model.Count(o => o.Status == Status.Concluida)</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Conteúdo das abas -->
+    <div class="tab-content mt-4" id="myTabContent">
+        <!-- Ofertas Pendentes -->
+        <div class="tab-pane fade show active" id="pendentes" role="tabpanel" aria-labelledby="pendentes-tab">
+            @if (Model.Any(o => o.Status == Status.Pendente))
+            {
+                <div class="row cards-doacoes">
+                    @foreach (var oferta in Model.Where(o => o.Status == Status.Pendente))
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card card-doacao shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-2">Oferta @oferta.Id</h5>
+                                    <p><strong>Status:</strong> @oferta.Status.ToString()</p>
+                                    <p><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
+                                    <p><strong>Data:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</p>
+
+                                    @if (oferta.IsCestaCompleta)
+                                    {
+                                        <p><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</p>
+                                    }
+                                    else if (oferta.ItensOferta != null && oferta.ItensOferta.Any())
+                                    {
+                                        <strong>Itens:</strong>
+                                        <ul>
+                                            @foreach (var item in oferta.ItensOferta)
+                                            {
+                                                <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                                            }
+                                        </ul>
+                                    }
+
+                                    <!-- Botões -->
+                                    <div class="d-flex flex-wrap gap-1 acoes-doacao">
+                                        <a class="btn btn-sm btn-primary-app me-1" asp-action="Details" asp-route-id="@oferta.Id">Ver detalhes</a>
+                                        <a class="btn btn-sm btn-primary-outline-app me-1" asp-action="Edit" asp-route-id="@oferta.Id">Editar</a>
+                                        <form asp-action="Cancelar" asp-route-id="@oferta.Id" method="post" class="d-inline">
+                                            <a class="btn btn-sm btn-secondary-app" asp-action="Cancelar" asp-route-id="@oferta.Id">
+                                                Cancelar
+                                            </a>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Você não tem ofertas pendentes, gostaria de oferecer uma doação?</p>
+            }
+        </div>
+
+        <!-- Ofertas Canceladas -->
+        <div class="tab-pane fade" id="canceladas" role="tabpanel" aria-labelledby="canceladas-tab">
+            @if (Model.Any(o => o.Status == Status.Cancelada))
+            {
+                <div class="row cards-doacoes">
+                    @foreach (var oferta in Model.Where(o => o.Status == Status.Cancelada))
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card card-doacao shadow-sm">
+                                <div class="card-body">
+                                    <h5>Oferta @oferta.Id</h5>
+                                    <p><strong>Status:</strong> @oferta.Status.ToString()</p>
+                                    <p><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
+                                    <p><strong>Data:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</p>
+
+                                    @if (oferta.IsCestaCompleta)
+                                    {
+                                        <p><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</p>
+                                    }
+                                    else if (oferta.ItensOferta != null && oferta.ItensOferta.Any())
+                                    {
+                                        <strong>Itens:</strong>
+                                        <ul>
+                                            @foreach (var item in oferta.ItensOferta)
+                                            {
+                                                <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                                            }
+                                        </ul>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(oferta.JustificativaCancelamento))
+                                    {
+                                        <p><strong>Justificativa:</strong> @oferta.JustificativaCancelamento</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Você não tem ofertas canceladas.</p>
+            }
+        </div>
+
+        <!-- Ofertas Concluídas -->
+        <div class="tab-pane fade" id="concluidas" role="tabpanel" aria-labelledby="concluidas-tab">
+            @if (Model.Any(o => o.Status == Status.Concluida))
+            {
+                <div class="row cards-doacoes">
+                    @foreach (var oferta in Model.Where(o => o.Status == Status.Concluida))
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card card-doacao shadow-sm">
+                                <div class="card-body">
+                                    <h5>Oferta @oferta.Id</h5>
+                                    <p><strong>Status:</strong> @oferta.Status.ToString()</p>
+                                    <p><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
+                                    <p><strong>Data:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</p>
+
+                                    @if (oferta.IsCestaCompleta)
+                                    {
+                                        <p><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</p>
+                                    }
+                                    else if (oferta.ItensOferta != null && oferta.ItensOferta.Any())
+                                    {
+                                        <strong>Itens:</strong>
+                                        <ul>
+                                            @foreach (var item in oferta.ItensOferta)
+                                            {
+                                                <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Você não tem ofertas concluídas.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Botão para adicionar nova oferta -->
+<div class="text-center mt-4">
+    <button class="btn btn-primary-app" data-bs-toggle="modal" data-bs-target="#modalEscolherTipo">
+        Oferecer uma doação
+    </button>
+</div>
+
+<!-- Modal para escolher tipo de oferta -->
+<div class="modal fade" id="modalEscolherTipo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <partial name="~/Views/OfertasDoacao/_TipoDeOferta.cshtml" />
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+﻿@model app.Models.OfertaDoacao
+@using app.Enums
+@using app.Extensions
+
+@{
+    ViewData["Title"] = "Detalhes da Oferta de Doação";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="page-title">Detalhes da Oferta de Doação</h1>
+
+<div class="row justify-content-center">
+    <div class="container-doacao col-lg-8 col-xl-6">
+        <dl class="row">
+            <dt class="col-sm-4">Nome do doador</dt>
+            <dd class="col-sm-8">@ViewBag.NomeDoador</dd>
+
+            <dt class="col-sm-4">Data da oferta</dt>
+            <dd class="col-sm-8">@Model.DataCadastro.ToString("dd/MM/yyyy")</dd>
+
+		    <dt class="col-sm-4">Status</dt>
+		    <dd class="col-sm-8">@Model.Status</dd>
+
+            @if (Model.IsCestaCompleta)
+            {
+                <dt class="col-sm-4">Tipo de oferta</dt>
+                <dd class="col-sm-8">Cesta completa</dd>
+
+                <dt class="col-sm-4">Quantidade de cestas</dt>
+                <dd class="col-sm-8">@Model.QtdeCestas</dd>
+            }
+            else 
+            {
+                <dt class="col-sm-4">Tipo de oferta</dt>
+                <dd class="col-sm-8">Itens não pereciveis</dd>
+
+                <dt class="col-sm-4">Itens oferecidos</dt>
+                <dd class="col-sm-8">
+                    <ul>
+                        @foreach (var item in Model.ItensOferta)
+                        {
+                            <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                        }
+                    </ul>
+                </dd>
+		    }
+        
+            <dt class="col-sm-4">Tipo de transporte</dt>
+            <dd class="col-sm-8">@Model.TipoTransporte.GetDisplayName()</dd>
+
+            <dt class="col-sm-4">Agendamentos</dt>
+            <dd class="col-sm-8">
+                @if (Model.OpcoesAgendamento?.Any() == true)
+                {
+                    <ul>
+                        @foreach (var agendamento in Model.OpcoesAgendamento)
+                        {
+                            <li>@agendamento.DiaDaSemana.GetDisplayName() - das @agendamento.HorarioInicio.ToString(@"hh\:mm") até @agendamento.HorarioFinal.ToString(@"hh\:mm")</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <em>Não informado</em>
+                }
+            </dd>
+        </dl>
+        <div class="row grupo-btn">
+            <div class="col-6 order-1">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary-app">Editar</a>
+            </div>
+            <div class="col-6 order-0">
+                <a asp-action="GerenciarOfertas" class="btn btn-secondary-app">Voltar</a>
+            </div>
+        </div>
+    </div>
+</div>

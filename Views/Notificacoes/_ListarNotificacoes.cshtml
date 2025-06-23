@@ -1,0 +1,85 @@
+﻿@model IEnumerable<app.Models.Notificacao>
+@using app.Enums
+@using app.Extensions
+
+<li>
+	<h6 class="dropdown-header">Notificações</h6>
+</li>
+
+@if (Model.Any())
+{
+	@foreach (var notificacao in Model)
+	{
+		<li>
+			@if(notificacao.IsLida)
+			{
+				<div class="notificacao lida border-top" id="@notificacao.Id">
+					<div class="header-notificacao d-flex justify-content-between">
+						<small class="data-notificacao">
+							@notificacao.DataNotificacao.ToLocalTime()
+						</small>
+						<span class="acoes">
+							<button class="btn-excluir-notificacao" data-bs-toggle="tooltip" data-bs-title="Excluir">
+								<i class="bi bi-trash"></i>
+							</button>
+						</span>
+					</div>
+					<div class="conteudo-notificacao">
+						<a asp-action="ListarAgendamentos" asp-controller="Transacoes" class="link-detalhes">
+							@notificacao.TipoNotificacao.GetDisplayName() 
+							<br />
+							<small>Ver em agendamentos <i class="bi bi-chevron-right"></i></small>
+						</a>
+					</div>
+				</div>
+			}
+
+			else
+			{
+				<div class="notificacao nao-lida border-top" id="@notificacao.Id">
+					<div class="header-notificacao d-flex justify-content-between align-items-center">
+						<small class="data-notificacao d-flex align-items-center gap-2">
+							<i class="bi bi-circle-fill icon-nao-lida"></i> @notificacao.DataNotificacao.ToLocalTime()
+						</small>
+						<span class="acoes d-flex align-items-center">
+							<button class="btn-marcar-como-lida" data-bs-toggle="tooltip" data-bs-title="Marcar como lida">
+								<i class="bi bi-check-circle"></i>
+							</button>
+							<button class="btn-excluir-notificacao" data-bs-toggle="tooltip" data-bs-title="Excluir">
+								<i class="bi bi-trash"></i>
+							</button>
+						</span>
+					</div>
+					<div class="conteudo-notificacao">
+						<a asp-action="ListarAgendamentos" asp-controller="Transacoes" class="link-detalhes">
+							@notificacao.TipoNotificacao.GetDisplayName() <br />
+							<small>Ver em agendamentos <i class="bi bi-chevron-right"></i></small>
+						</a>
+					</div>
+				</div>
+			}
+		</li>
+	}
+	<li>
+		<div class="dropdown-footer d-flex justify-content-end gap-2 border-top">
+			<a href="#" id="btnLerTodas">
+				Marcar todas como lidas
+			</a>
+			<a href="#" id="btnExcluirTodas">
+				Excluir todas
+			</a>
+		</div>
+	</li>
+}
+
+else
+{
+	<li class="sem-notificacao">
+		Você não tem notificações.
+	</li>
+}
+
+<script>
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+</script>

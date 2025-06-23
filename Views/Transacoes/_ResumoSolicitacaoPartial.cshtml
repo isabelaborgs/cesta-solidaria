@@ -1,0 +1,99 @@
+﻿@model app.Models.SolicitacaoDoacao
+@using app.Enums
+@using app.Extensions
+
+<div class="d-flex justify-content-between" id="tituloResumo">
+    <h3>Resumo da doação</h3>
+    <button class="btn-expandir" type="button" data-bs-toggle="collapse" data-bs-target="#collapseResumo" aria-expanded="false">
+        <i class="bi bi-chevron-down"></i>
+    </button>
+</div>
+<div class="collapse show" id="collapseResumo">
+    <h5>
+        Informações do doador
+    </h5>
+    <dl class="row">
+        <dt class="col-lg-4">Nome</dt>
+        <dd class="col-lg-8">@Model.UsuarioOng.Nome</dd>
+
+        <dt class="col-lg-4">Informações de contato</dt>
+        <dd class="col-lg-8">
+            <div>
+                @string.Format("{0:(00\\) 00000\\-0000}", long.Parse(Model.UsuarioOng.Telefone))
+            </div>
+            <div>
+                @Model.UsuarioOng.Email
+            </div>
+        </dd>
+    </dl>
+
+    <h5>Informações da doação</h5>
+    <dl class="row">
+        <dt class="col-lg-4">Data do cadastro</dt>
+        <dd class="col-lg-8">@Model.DataSolicitacao.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-lg-4">Tipo de doação</dt>
+        <dd class="col-lg-8">
+            @(Model.IsCestaCompleta ?
+                "Cesta básica completa" :
+                "Itens não perecíveis avulsos")
+        </dd>
+
+        @if (Model.IsCestaCompleta)
+        {
+            <dt class="col-lg-4">Quantidade de cestas</dt>
+            <dd class="col-lg-8">@Model.QtdeCestas</dd>
+        }
+
+        @if (!Model.IsCestaCompleta && Model.ItensSolicitacao?.Any() == true)
+        {
+            <dt class="col-lg-4">Itens oferecidos</dt>
+            <dd class="col-lg-8">
+                <ul>
+                    @foreach (var item in Model.ItensSolicitacao)
+                    {
+                        <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                    }
+                </ul>
+            </dd>
+        }
+    </dl>
+
+    <h5>Informações da entrega</h5>
+    <dl class="row">
+        <dt class="col-lg-4">Tipo de transporte</dt>
+        <dd class="col-lg-8">
+            @(Model.TipoTransporte == TipoTransporte.Entrega ?
+                "Entrega pelo doador" :
+                "Retirada pela ONG")
+        </dd>
+
+        @if (Model.TipoTransporte == TipoTransporte.Entrega)
+        {
+            <dt class="col-lg-4">Endereço para entrega</dt>
+            <dd class="col-lg-8">
+                Você irá entregar a doação no endereço informado pela ONG: @ViewBag.EnderecoOng
+            </dd>
+        }
+        else
+        {
+            <dt class="col-lg-4">Endereço para retirada</dt>
+            <dd class="col-lg-8">
+                A ONG irá buscar a doação no endereço informado por você: @ViewBag.EnderecoDoador
+            </dd>
+        }
+
+        <dt class="col-lg-4">Horários disponíveis</dt>
+        <dd class="col-lg-8">
+            @if (Model.AgendamentosSolicitacao?.Any() == true)
+            {
+                <ul>
+                    @foreach (var horario in Model.AgendamentosSolicitacao)
+                    {
+                        <li>@horario.DiaSemana - das @horario.HorarioInicio.ToString(@"hh\:mm") até @horario.HorarioFim.ToString(@"hh\:mm")</li>
+                    }
+                </ul>
+            }
+        </dd>
+    </dl>
+</div>

@@ -1,0 +1,89 @@
+﻿@model app.Models.Transacao
+@* @model app.ViewModels.AgendamentoViewModel *@
+@using app.Extensions
+@using app.Enums
+
+@{
+    ViewData["Title"] = "Agendar Doação";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="wrapper-agendamento col-lg-8 col-xl-7">
+        <h1 class="page-title text-center">
+            @(Model.TipoDoacao == TipoDoacao.Oferta ? 
+                                "Aceitar Oferta de Doação" : 
+                                "Aceitar Solicitação de Doação")
+        </h1>
+
+        <div class="container-agendamento row">
+            @* Resumo da doação *@
+            @if (Model.Oferta != null)
+            {
+                <div class="resumo col-12">
+                    <partial name="_ResumoOfertaPartial" model="Model.Oferta" />
+                </div>
+            }
+
+            @if (Model.Solicitacao != null)
+            {
+                <div class="resumo col-12">
+                    <partial name="_ResumoSolicitacaoPartial" model="Model.Solicitacao" />
+                </div>
+            }
+
+            <hr />
+
+            @* Agendamento da doação *@
+            <div class="agendamento col-12">
+		        <h3>Agendar doação</h3>
+                <h5>Escolha um dos horários disponíveis</h5>
+                <form asp-action="AgendarDoacao" id="formAgendamento">
+					<partial name="_AgendamentoDoacaoPartial" model="Model" />
+
+                    @* Finalização do agendamento *@
+                    <div class="row grupo-btn">
+                        <div class="col-lg-6">
+                            <input type="submit" value="Concluir agendamento" class="btn btn-primary-app" />
+                        </div>
+                        <div class="col-lg-6">
+                            @if (User.IsInRole("Doador"))
+                            {
+                                <a class="btn btn-secondary-app" asp-controller="SolicitacoesDoacao" asp-action="ListarSolicitacoesParaDoadores">Cancelar</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-secondary-app" asp-controller="OfertasDoacao" asp-action="ListarOfertasParaOngs">Cancelar</a>
+                            }
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+			// Preencher os campos de data e horários com os valores do radio button selecionado
+            $('input[name="opcaoAgendamento"]').change(function () {
+                var selectedInput = $(this)[0];
+                console.log(selectedInput);
+                var valDataAgendada = selectedInput.dataset.dataagendada;
+                var valHorarioInicio = selectedInput.dataset.horarioinicio;
+                var valHorarioFinal = selectedInput.dataset.horariofinal;
+
+                console.log(valDataAgendada, valHorarioInicio, valHorarioFinal);
+
+                $('#dataAgendada').val(valDataAgendada);
+                $('#horarioInicio').val(valHorarioInicio);
+                $('#horarioFim').val(valHorarioFinal);
+            });
+        });
+    </script>
+}

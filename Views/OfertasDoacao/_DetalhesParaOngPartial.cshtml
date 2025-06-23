@@ -1,0 +1,76 @@
+﻿@model app.Models.OfertaDoacao
+@using app.Extensions
+@using app.Enums
+
+<div class="wrapper-doacao-disponivel">
+    <div class="header border-bottom">
+        <h2 class="title">
+            Detalhes da Oferta de Doação
+        </h2>
+        <h4 class="subtitle text-verde-app">
+            @(Model.IsCestaCompleta ? "Cesta Básica Completa" : "Itens Avulsos")
+        </h4>
+    </div>
+
+    <dl class="row">
+        <dt class="col-lg-4">Nome do Doador</dt>
+        <dd class="col-lg-8">@Model.UsuarioDoador?.Nome</dd>
+
+        <dt class="col-lg-4">Data da Oferta</dt>
+        <dd class="col-lg-8">@Model.DataCadastro.ToString("dd/MM/yyyy HH:mm")</dd>
+
+        @if (Model.IsCestaCompleta)
+        {
+            <dt class="col-lg-4">Quantidade de cestas</dt>
+            <dd class="col-lg-8">@Model.QtdeCestas</dd>
+        }
+
+        @if (!Model.IsCestaCompleta && Model.ItensOferta?.Any() == true)
+        {
+            <dt class="col-lg-4">Itens oferecidos</dt>
+            <dd class="col-lg-8">
+                <ul>
+                    @foreach (var item in Model.ItensOferta)
+                    {
+                        <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
+                    }
+                </ul>
+            </dd>
+        }
+
+        <dt class="col-lg-4">Tipo de transporte</dt>
+        <dd class="col-lg-8">@Model.TipoTransporte.GetDisplayName()</dd>
+
+        @if (Model.TipoTransporte == TipoTransporte.Retirada)
+        {
+            <dt class="col-lg-4">Endereço para retirada</dt>
+            <dd class="col-lg-8">@Model.UsuarioDoador?.Rua, nº @Model.UsuarioDoador?.Numero, @Model.UsuarioDoador?.Bairro, @Model.UsuarioDoador?.Cidade/@Model.UsuarioDoador?.Estado</dd>
+        }
+
+        <dt class="col-lg-4">Horários disponíveis</dt>
+        <dd class="col-lg-8">
+            @if (Model.OpcoesAgendamento?.Any() == true)
+            {
+                <ul>
+                    @foreach (var horario in Model.OpcoesAgendamento)
+                    {
+                        <li>@horario.DiaDaSemana.GetDisplayName() - das @horario.HorarioInicio.ToString(@"hh\:mm") até @horario.HorarioFinal.ToString(@"hh\:mm")</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <em>Não informado</em>
+            }
+        </dd>
+    </dl>
+
+    <div class="row grupo-btn">
+        <div class="col-lg-6">
+            <a class="btn btn-primary-app" asp-controller="Transacoes" asp-action="AgendarDoacao" asp-route-idDoacao="@Model.Id">Aceitar essa doação e agendar</a>
+        </div>
+        <div class="col-lg-6">
+            <button type="button" class="btn btn-secondary-app" data-bs-dismiss="modal">Ver mais ofertas</button>
+        </div>
+    </div>
+</div>

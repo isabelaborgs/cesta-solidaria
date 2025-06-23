@@ -1,0 +1,233 @@
+﻿@model IEnumerable<app.Models.Transacao>
+@using app.Enums
+@using app.Extensions
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mt-5">
+    <h1 class="page-title">Meus agendamentos de doações</h1>
+
+    <!-- Navegação de abas -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="agendadas-tab" data-bs-toggle="tab" href="#agendadas" role="tab" aria-controls="agendadas" aria-selected="true">
+                Próximos
+                <span class="badge bg-primary">@Model.Count(o => o.Status == Status.Confirmada)</span>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="canceladas-tab" data-bs-toggle="tab" href="#canceladas" role="tab" aria-controls="canceladas" aria-selected="false">
+                Cancelados
+                <span class="badge bg-danger">@Model.Count(o => o.Status == Status.Cancelada)</span>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="concluidas-tab" data-bs-toggle="tab" href="#concluidas" role="tab" aria-controls="concluidas" aria-selected="false">
+                Concluídos
+                <span class="badge bg-success">@Model.Count(o => o.Status == Status.Concluida)</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Conteúdo das abas -->
+    <div class="tab-content mt-4" id="myTabContent">
+        <!-- Próximos agendamentos -->
+        <div class="tab-pane fade show active" id="agendadas" role="tabpanel" aria-labelledby="agendadas-tab">
+            @if (Model.Any(o => o.Status == Status.Confirmada))
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Doador
+                                </th>
+                                <th>
+                                    ONG
+                                </th>
+                                <th>
+                                    Tipo de doação
+                                </th>
+                                <th>
+                                    Formato de entrega
+                                </th>
+                                <th>
+                                    Agendamento
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transacao in Model.Where(o => o.Status == Status.Confirmada))
+                            {
+                                <tr>
+                                    <td>
+                                        @transacao.Doador.Nome
+                                    </td>
+                                    <td>
+                                        @transacao.Ong.Nome
+                                    </td>
+                                    <td>
+                                        @transacao.TipoDoacao.GetDisplayName()
+                                    </td>
+                                    <td>
+                                        @transacao.TipoTransporte.GetDisplayName()
+                                    </td>
+                                    <td>
+                                        @transacao.DataAgendada.ToString("dd/MM/yyyy") - @transacao.InicioHorarioAgendado.ToString(@"hh\:mm")-@transacao.FimHorarioAgendado.ToString(@"hh\:mm")
+                                    </td>
+                                    <td>
+                                        <a asp-action="GerenciarAgendamento" asp-route-id="@transacao.Id" class="btn btn-primary-outline-app">Gerenciar</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <h5 class="text-center">Você não tem próximos agendamentos, gostaria de visualizar as doações disponíveis?</h5>
+            }
+        </div>
+
+        <!-- Agendamentos cancelados -->
+        <div class="tab-pane fade" id="canceladas" role="tabpanel" aria-labelledby="canceladas-tab">
+            @if (Model.Any(o => o.Status == Status.Cancelada))
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Doador
+                                </th>
+                                <th>
+                                    ONG
+                                </th>
+                                <th>
+                                    Tipo de doação
+                                </th>
+                                <th>
+                                    Agendamento
+                                </th>
+                                <th>
+                                    Justificativa
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transacao in Model.Where(o => o.Status == Status.Cancelada))
+                            {
+                                <tr>
+                                    <td>
+                                        @transacao.Doador.Nome
+                                    </td>
+                                    <td>
+                                        @transacao.Ong.Nome
+                                    </td>
+                                    <td>
+                                        @transacao.TipoDoacao.GetDisplayName()
+                                    </td>
+                                    <td class="text-danger">
+                                        Cancelado
+                                    </td>
+                                    <td>
+                                        @transacao.JustificativaCancelamento
+                                    </td>
+                                    <td>
+                                        <a asp-action="GerenciarAgendamento" asp-route-id="@transacao.Id" class="btn btn-primary-outline-app">Ver detalhes</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>Você não tem agendamentos cancelados.</p>
+            }
+        </div>
+
+        <!-- Agendamentos Concluídos -->
+        <div class="tab-pane fade" id="concluidas" role="tabpanel" aria-labelledby="concluidas-tab">
+            @if (Model.Any(o => o.Status == Status.Concluida))
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Doador
+                                </th>
+                                <th>
+                                    ONG
+                                </th>
+                                <th>
+                                    Tipo de doação
+                                </th>
+                                <th>
+                                    Formato de entrega
+                                </th>
+                                <th>
+                                    Data de conclusão
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transacao in Model.Where(o => o.Status == Status.Concluida))
+                            {
+                                <tr>
+                                    <td>
+                                        @transacao.Doador.Nome
+                                    </td>
+                                    <td>
+                                        @transacao.Ong.Nome
+                                    </td>
+                                    <td>
+                                        @transacao.TipoDoacao.GetDisplayName()
+                                    </td>
+                                    <td>
+                                        @transacao.TipoTransporte.GetDisplayName()
+                                    </td>
+                                    <td>
+                                        @transacao.DataConclusao?.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        <a asp-action="GerenciarAgendamento" asp-route-id="@transacao.Id" class="btn btn-primary-outline-app">Ver detalhes</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>Você não tem doações concluídas.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Botão para adicionar nova oferta -->
+<div class="text-center mt-4">
+	@if (User.IsInRole("Doador"))
+	{
+        <a asp-controller="SolicitacoesDoacao" asp-action="ListarSolicitacoesParaDoadores" class="btn btn-primary-app">
+            Visualizar solicitações de doação disponíveis
+        </a>
+	}
+	else
+	{
+		<a asp-controller="OfertasDoacao" asp-action="ListarOfertasParaOngs" class="btn btn-primary-app mt-5">
+            Visualizar ofertas de doação disponíveis
+		</a>
+	}
+</div>

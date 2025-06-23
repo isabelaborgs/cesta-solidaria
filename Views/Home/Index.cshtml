@@ -1,0 +1,211 @@
+﻿@using app.Enums
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+@* <section class="landing-section col-sm-10 col-md-9 col-lg-8 col-xl-6 mx-auto" id="sectionHero"> *@
+<section class="landing-section row" id="sectionHero">
+    <div class="col-sm-10 col-md-9 col-lg-8 col-xl-6 mx-auto hero-text">
+        <img class="d-block mx-auto mx-xl-0 hero-icon" src="~/img/icone-logotipo.svg" alt="">
+        <div class="headline">
+            <h1 class="hero-title">
+                Conectamos doadores de alimentos a ONGs
+            </h1>
+            <p class="hero-subtitle">
+                Ofereça ou solicite cestas básicas e alimentos não perecíveis, agende a entrega e faça a diferença!
+            </p>
+        </div>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center justify-content-xl-start">
+            <button type="button" class="btn btn-primary-app btn-lg gap-3" data-bs-toggle="modal" data-bs-target="#modalCadastro">Quero fazer parte</button>
+            <a href="#sectionComoFunciona" class="btn btn-secondary-app btn-lg px-4">Saiba mais</a>
+        </div>
+    </div>
+    <div class="col-lg-6 mx-auto hero-image">
+        <img src="~/img/doacao-alimentos.svg" alt="" />
+    </div> 
+</section>
+
+<section class="landing-section" id="sectionComoFunciona">
+    <div class="header-section">
+        <h2 class="section-title">
+            Como funciona
+        </h2>
+        <p class="section-description col-sm-10 mx-auto">
+            Através da plataforma Cesta Solidária, pessoas e empresas podem doar alimentos não perecíveis e cestas básicas de alimentos para ONGs que direcionam os alimentos para quem precisa.
+        </p>
+    </div>
+    
+    <div class="row flex-column flex-lg-row features">
+        <div class="col-sm-8 col-md-6 col-lg-4">
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="bi bi-person"></i>
+                </div>
+                <div class="feature-body">
+                    <div class="feature-title">
+                        Cadastre-se
+                    </div>
+                    <div class="feature-description">
+                        Crie uma conta como doador ou solicitante
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-md-6 col-lg-4">
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="bi bi-box2-heart"></i>
+                </div>
+                <div class="feature-body">
+                    <div class="feature-title">
+                        Ofereça ou solicite
+                    </div>
+                    <div class="feature-description">
+                        Cadastre uma oferta ou solicitação de doação de alimentos
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-md-6 col-lg-4">
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="feature-body">
+                    <div class="feature-title">
+                        Agende e conclua
+                    </div>
+                    <div class="feature-description">
+                        Combine o melhor horário para entrega ou retirada da doação
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="landing-section" id="sectionStats">
+    <div class="row g-0 px-5 stats">
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat">
+                <i class="bi bi-heart-fill"></i>
+                <div class="stat-body">
+                    <div class="number">
+                        200+
+                    </div>
+                    <div class="text">
+                        doações concluídas
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat">
+                <i class="bi bi-fork-knife"></i>
+                <div class="stat-body">
+                    <div class="number">
+                        600kg+ 
+                    </div>
+                    <div class="text">
+                        alimentos doados
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat">
+                <i class="bi bi-person-fill"></i>
+                <div class="stat-body">
+                    <div class="number">
+                        120+
+                    </div>
+                    <div class="text">
+                        doadores ativos
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat">
+                <i class="bi bi-people-fill"></i>
+                <div class="stat-body">
+                    <div class="number">
+                        50+
+                    </div>
+                    <div class="text">
+                        ONGs parceiras
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="landing-section" id="sectionDepoimentos">
+    <h1 class="section-title mb-5">
+        Depoimentos
+    </h1>
+    <div class="row depoimentos justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-4">
+            <div class="depoimento">
+                <div class="texto-depoimento">
+                    <i class="bi bi-quote"></i>
+                    <div>
+                        A Plataforma Cesta Solidária me proporcionou uma maneira simples e confiável de doar alimentos. Agora tenho a garantia de que minha contribuição está chegando a quem mais precisa.
+                    </div>
+                </div>
+                <div class="autor-depoimento">
+                    <img src="img/doadorpf-depoimento.png" alt="Foto de um homem" class="foto-depoimento" />
+                    <div>
+                        <h6 class="nome">Carlos Lima</h6>
+                        <p class="funcao">Doa como pessoa física na Cesta Solidária</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10 col-lg-8 col-xl-4">
+            <div class="depoimento">
+                <div class="texto-depoimento">
+                    <i class="bi bi-quote"></i>
+                    <div>
+                        Com a Cesta Solidária, agora consigo destinar de forma confiável produtos próximos ao vencimento em meu supermercado para pessoas que estão passando fome.
+                    </div>
+                </div>
+                <div class="autor-depoimento">
+                    <img src="img/doadorpj-depoimento.png" alt="Foto de uma mulher" class="foto-depoimento" />
+                    <div>
+                        <h6 class="nome">Maria Santos</h6>
+                        <p class="funcao">Representa empresa doadora na Cesta Solidária</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10 col-lg-8 col-xl-4">
+            <div class="depoimento">
+                <div class="texto-depoimento">
+                    <i class="bi bi-quote"></i>
+                    <div>
+                        A Cesta Solidária nos ajudou a vencer a dificuldade de encontrar doações de alimentos. Agora conseguimos arrecadar alimentos com mais facilidade e chegar a mais pessoas que precisam.
+                    </div>
+                </div>
+                <div class="autor-depoimento">
+                    <img src="img/ong-depoimento.png" alt="Foto de uma mulher" class="foto-depoimento" />
+                    <div>
+                        <h6 class="nome">Lara Costa</h6>
+                        <p class="funcao">Representa ONG na Cesta Solidária</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10 col-lg-8 col-xl-12">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#modalCadastro" class="btn btn-secondary-app mb-5 mt-5" id="btnCTA"> Quero fazer parte da transformação</button>
+        </div>
+    </div>
+</section>

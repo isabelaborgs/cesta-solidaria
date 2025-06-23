@@ -1,0 +1,53 @@
+﻿@model app.Models.UsuarioOng
+
+@{
+    ViewData["Title"] = "Editar dados";
+}
+
+<div class="row justify-content-center">
+    <div class="wrapper-user wrapper-edit-user col-lg-8 col-xl-7">
+        <h1 class="page-title header-user header-edit-user">
+            Editar dados da conta
+        </h1>
+
+        <div class="container-form-user container-form-edit-user align-items-center">
+            <form asp-action="EditOng" class="form-user form-edit-user row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group col-12">
+                    <label asp-for="Nome" class="control-label default-label">Nome da ONG</label>
+                    <input asp-for="Nome" class="form-control" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12">
+                    <label asp-for="RazaoSocial" class="control-label default-label">Razão Social</label>
+                    <input asp-for="RazaoSocial" class="form-control" />
+                    <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Cnpj" class="control-label default-label">CNPJ</label>
+                    <input asp-for="Cnpj" class="form-control" />
+                    <span asp-validation-for="Cnpj" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Telefone" class="control-label default-label">Telefone comercial</label>
+                    <input asp-for="Telefone" class="form-control" />
+                    <span asp-validation-for="Telefone" class="text-danger"></span>
+                </div>
+
+                <partial name="_FormUsuarioPartial" model="@Model" />
+
+                <div class="form-group col-12">
+                    <input type="submit" value="Salvar alterações" class="btn btn-primary-app salvar-edit-user" />
+                </div>
+            </form>
+            <div class="opcao-cancelar">
+                <a asp-action="Details" class="link-app">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

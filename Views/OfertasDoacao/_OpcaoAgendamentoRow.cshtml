@@ -1,0 +1,16 @@
+﻿@using app.Enums
+@using app.Extensions
+@model app.Models.OpcaoAgendamentoOferta
+
+<tr class="agendamento-row" data-clientid="@Model.ClientId">
+    <td>@Model.DiaDaSemana.GetDisplayName()</td>
+    <td>@Model.HorarioInicio.ToString(@"hh\:mm") - @Model.HorarioFinal.ToString(@"hh\:mm")</td>
+    <td>
+        <button type="button" class="btn btn-danger btn-sm remover-opcao">Remover</button>
+        <input type="hidden" name="OpcoesAgendamento[@Model.ClientId].DiaDaSemana" value="@((int)Model.DiaDaSemana)" />
+        <input type="hidden" name="OpcoesAgendamento[@Model.ClientId].HorarioInicio" value="@Model.HorarioInicio" />
+        <input type="hidden" name="OpcoesAgendamento[@Model.ClientId].HorarioFinal" value="@Model.HorarioFinal" />
+        <input type="hidden" name="OpcoesAgendamento[@Model.ClientId].ClientId" value="@Model.ClientId" />
+        <input type="hidden" name="OpcoesAgendamento.Index" value="@Model.ClientId" />
+    </td>
+</tr>

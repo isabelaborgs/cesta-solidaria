@@ -1,0 +1,202 @@
+﻿@model app.Models.Transacao
+@using app.Enums
+@using app.Extensions
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="wrapper-agendamento wrapper-resumo col-lg-8 col-xl-7">
+        <h1 class="page-title text-center">
+            Gerenciar agendamento de doação
+        </h1>
+
+        <div class="container-agendamento row">
+            @* Resumo da doação *@
+            @if (Model.TipoDoacao == TipoDoacao.Oferta && Model.Oferta != null)
+            {
+                <div class="resumo col-12">
+                    <partial name="_ResumoOfertaPartial" model="Model.Oferta" />
+                </div>
+            }
+
+            @if (Model.TipoDoacao == TipoDoacao.Solicitacao && Model.Solicitacao != null)
+            {
+                <div class="resumo col-12">
+                    <partial name="_ResumoSolicitacaoPartial" model="Model.Solicitacao" />
+                </div>
+            }
+
+            <hr />
+
+
+            @if (Model.Status == Status.Confirmada)
+            {
+                @* Horário Agendado*@
+                <div class="agendamento col-12 mb-3">
+                    <h3 class="subtitulo-agendamento">Horário agendado</h3>
+                    <div class="row">
+                        <h5 class="col-md-6">@Model.DataAgendada.ToString("dd/MM/yyyy") - Entre @Model.InicioHorarioAgendado.ToString(@"hh\:mm") e @Model.FimHorarioAgendado.ToString(@"hh\:mm")</h5>
+                        <div class="col-md-6 justify-content-md-end align-items-center acoes-agendamento ">
+                            <button class="btn btn-primary-outline-app" data-bs-toggle="modal" data-bs-target="#modalReagendar">
+                                <i class="bi bi-pencil-square"></i>
+                                Reagendar
+                            </button>
+                            <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                                <i class="bi bi-x"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+             
+                @* Ações *@
+                <div class="row grupo-btn">
+                    <div class="col-sm-8 order-1">
+                        <button class="btn btn-primary-app" data-bs-toggle="modal" data-bs-target="#modalConcluir">Marcar como concluída</button>
+                    </div>
+                    <div class="col-sm-4 order-0">
+                        <a asp-action="ListarAgendamentos" class="btn btn-secondary-app">Voltar</a>
+                    </div>
+                </div>
+            }
+
+            else if (Model.Status == Status.Cancelada)
+            {
+                @* Informações do cancelamento *@
+                <div class="agendamento-cancelado">
+                    <h3 class="mb-3 text-danger"><i class="bi bi-x-circle-fill"></i> Agendamento cancelado</h3>
+                    <h5>Justificativa:</h5>
+                    @Model.JustificativaCancelamento
+                </div>
+                <div>
+                    <a asp-action="ListarAgendamentos" class="btn btn-secondary-app">Voltar</a>
+                </div>
+            }
+
+            else if (Model.Status == Status.Concluida)
+            {
+                @* Informações da conclusão *@
+                <div class="doacao-concluida">
+                    <h3 class="mb-3 text-success"><i class="bi bi-check-circle-fill"></i>  Doação concluída</h3>
+                    <h5>Data de conclusão: @Model.DataConclusao?.ToString("dd/MM/yyyy")</h5>
+                </div>
+                <div>
+                    <a asp-action="ListarAgendamentos" class="btn btn-secondary-app">Voltar</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-agendamento" id="modalReagendar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3>Regendar doação</h3>
+                <h5>Escolha um dos horários disponíveis</h5>
+                <form asp-action="Reagendar" id="formAgendamento">
+                    <input type="hidden" asp-for="Id" />
+                    <partial name="_AgendamentoDoacaoPartial" model="Model" />
+
+                    @* Finalização do reagendamento *@
+                    <div class="row grupo-btn">
+                        <div class="col-lg-6">
+                            <input type="submit" value="Reagendar" class="btn btn-primary-app" />
+                        </div>
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-secondary-app" data-bs-dismiss="modal">Manter meu horário</button>
+                        </div>
+                    </div>
+                
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-agendamento" id="modalConcluir" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3>Marcar doação como concluída</h3>
+                <form asp-action="ConcluirDoacao" id="formConclusao">
+					<input type="hidden" name="id" value="@Model.Id"/>
+                    <label for="dataConclusao">Data de conclusão</label>
+					<input type="date" class="form-control mb-4" id="dataConclusao" name="dataConclusao" required />
+                    <div class="row grupo-btn">
+                        <div class="col-lg-6">
+                            <input type="submit" value="Concluir" class="btn btn-primary-app" />
+                        </div>
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-secondary-app" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-agendamento" id="modalCancelar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-danger mb-3">Cancelar agendamento</h3>
+                <h5>
+                    Atenção: Esta ação é irreversível. Confirme o cancelamento informando uma justificativa.
+                </h5>
+                <form asp-action="CancelarAgendamento" id="formCancelamento">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <textarea name="justificativaCancelamento" id="justificativaCancelamento" class="form-control mb-4" rows="4" required></textarea>
+                    <div class="grupo-btn row">
+                        <div class="col">
+                            <input type="submit" value="Cancelar" class="btn btn-danger" />
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary-outline-app" data-bs-dismiss="modal">Voltar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Preencher os campos de data e horários com os valores do radio button selecionado
+            $('input[name="opcaoAgendamento"]').change(function () {
+                var selectedInput = $(this)[0];
+                console.log(selectedInput);
+                var valDataAgendada = selectedInput.dataset.dataagendada;
+                var valHorarioInicio = selectedInput.dataset.horarioinicio;
+                var valHorarioFinal = selectedInput.dataset.horariofinal;
+
+                console.log(valDataAgendada, valHorarioInicio, valHorarioFinal);
+
+                $('#dataAgendada').val(valDataAgendada);
+                $('#horarioInicio').val(valHorarioInicio);
+                $('#horarioFim').val(valHorarioFinal);
+            });
+        });
+    </script>
+}

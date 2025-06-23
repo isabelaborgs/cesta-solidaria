@@ -1,0 +1,117 @@
+﻿@model app.Models.Transacao
+@using app.Enums
+@using app.Extensions
+
+@* Campos ocultos para o envio dos dados do agendamento *@
+<input type="hidden" asp-for="IdDoador" />
+<input type="hidden" asp-for="IdOng" />
+<input type="hidden" asp-for="IdOferta" />
+<input type="hidden" asp-for="IdSolicitacao" />
+<input type="hidden" asp-for="TipoDoacao" />
+<input type="hidden" asp-for="TipoTransporte" />
+<input type="hidden" asp-for="DataAgendada" id="dataAgendada" />
+<input type="hidden" asp-for="InicioHorarioAgendado" id="horarioInicio" />
+<input type="hidden" asp-for="FimHorarioAgendado" id="horarioFim" />
+<input type="hidden" asp-for="Status" value="@Status.Confirmada" />
+
+@* Escolher uma opção para agendamento *@
+@if (Model.TipoDoacao == TipoDoacao.Oferta)
+{
+    var opcoes = (List<OpcaoAgendamentoOferta>)Model.Oferta.OpcoesAgendamento;
+    var dataAtual = DateTime.Now;
+
+    @* Lista opções de agendamento da oferta *@
+    @foreach (var opcao in opcoes)
+    {
+        var idOpcao = $"opcao{opcao.Id}";
+        var idSegundaOpcao = $"segundaOpcao{opcao.Id}";
+
+        @* Duas próximas datas no dia da semana especificado *@
+        var proximaData = opcao.DiaDaSemana.GetProximaData();
+        var segundaData = proximaData.AddDays(7);
+
+        <div class="form-check">
+            <label class="form-check-label" for="@idOpcao">
+                <input type="radio"
+                name="opcaoAgendamento"
+                class="form-check-input"
+                id="@idOpcao"
+                value="@idOpcao"
+                data-dataAgendada="@proximaData"
+                data-horarioInicio="@opcao.HorarioInicio"
+                data-horarioFinal="@opcao.HorarioFinal" />
+                <span>
+                    @proximaData.ToString("dd/MM/yyyy") (@opcao.DiaDaSemana.GetDisplayName()) - @opcao.HorarioInicio.ToString(@"hh\:mm") - @opcao.HorarioFinal.ToString(@"hh\:mm")
+                </span>
+            </label>
+        </div>
+
+        <div class="form-check">
+            <label class="form-check-label" for="@idSegundaOpcao">
+                <input type="radio"
+                name="opcaoAgendamento"
+                class="form-check-input"
+                id="@idSegundaOpcao"
+                value="@idSegundaOpcao"
+                data-dataAgendada="@segundaData"
+                data-horarioInicio="@opcao.HorarioInicio"
+                data-horarioFinal="@opcao.HorarioFinal" />
+                <span>
+                    @segundaData.ToString("dd/MM/yyyy") (@opcao.DiaDaSemana.GetDisplayName()) - @opcao.HorarioInicio.ToString(@"hh\:mm") - @opcao.HorarioFinal.ToString(@"hh\:mm")
+                </span>
+            </label>
+        </div>
+    }
+}
+
+@if (Model.TipoDoacao == TipoDoacao.Solicitacao)
+{
+    var opcoes = (List<OpcaoAgendamentoSolicit>)Model.Solicitacao.AgendamentosSolicitacao;
+    var dataAtual = DateTime.Now;
+
+    @* Lista opções de agendamento da oferta *@
+    @foreach (var opcao in opcoes)
+    {
+        var idOpcao = $"opcao{opcao.Id}";
+        var idSegundaOpcao = $"segundaOpcao{opcao.Id}";
+
+        var stringDia = opcao.DiaSemana;
+        DiaDaSemana enumDia = (DiaDaSemana)Enum.Parse(typeof(DiaDaSemana), stringDia);
+
+        @* Duas próximas datas no dia da semana especificado *@
+        var proximaData = enumDia.GetProximaData();
+        var segundaData = proximaData.AddDays(7);
+
+        <div class="form-check">
+            <label class="form-check-label" for="@idOpcao">
+                <input type="radio"
+                       name="opcaoAgendamento"
+                       class="form-check-input"
+                       id="@idOpcao"
+                       value="@idOpcao"
+                       data-dataAgendada="@proximaData"
+                       data-horarioInicio="@opcao.HorarioInicio"
+                       data-horarioFinal="@opcao.HorarioFim" />
+                <span>
+                    @proximaData.ToString("dd/MM/yyyy") (@opcao.DiaSemana) - @opcao.HorarioInicio.ToString(@"hh\:mm") - @opcao.HorarioFim.ToString(@"hh\:mm")
+                </span>
+            </label>
+        </div>
+
+        <div class="form-check">
+            <label class="form-check-label" for="@idSegundaOpcao">
+                <input type="radio"
+                       name="opcaoAgendamento"
+                       class="form-check-input"
+                       id="@idSegundaOpcao"
+                       value="@idSegundaOpcao"
+                       data-dataAgendada="@segundaData"
+                       data-horarioInicio="@opcao.HorarioInicio"
+                       data-horarioFinal="@opcao.HorarioFim" />
+                <span>
+                    @segundaData.ToString("dd/MM/yyyy") (@opcao.DiaSemana) - @opcao.HorarioInicio.ToString(@"hh\:mm") - @opcao.HorarioFim.ToString(@"hh\:mm")
+                </span>
+            </label>
+        </div>
+    }
+}

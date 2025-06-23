@@ -1,0 +1,460 @@
+﻿@model app.Models.SolicitacaoDoacao
+@using app.Enums
+@using app.Extensions
+
+@{
+    ViewData["Title"] = "Editar solicitação de itens";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="wrapper-doacao col-lg-9 col-xl-8 col-xxl-7">
+        <div class="header-doacao">
+            <h1 class="page-title">
+                Editar solicitação de doação
+            </h1>
+        </div>
+
+        <div class="container-form-doacao align-items-center">
+            <form asp-action="Edit" method="post" class="form-doacao" id="formEditSolicitacao">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="IsCestaCompleta" />
+
+                @* Informações dos itens a doar *@
+                @if (Model.IsCestaCompleta)
+                {
+                    @* Doação de cestas completas *@
+                    <section id="sectionItensCesta" class="section-doacao">
+                        <h4 class="titulo-section-doacao">Itens da solicitação</h4>
+                        <div class="row">
+
+                            @* Editar quantidade de cestas *@
+                            <div class="col-md-6 d-flex flex-column gap-3  order-1 order-md-0">
+                                <img src="~/img/cesta-alimentos.png" alt="Desenho de uma Cesta Básica de Alimentos" class="img-cesta-alimentos d-none d-md-block">
+                                <div class="form-group row input-qtde-cestas">
+                                    <div class="col-8">
+                                        <label asp-for="QtdeCestas" class="control-label">
+                                            Quantidade de cestas
+                                        </label>
+                                    </div>
+                                    <div class="col-3">
+                                        <input asp-for="QtdeCestas" class="form-control" type="number" min="1" aria-describedby="validacaoQtde">
+                                        <div id="validacaoQtde" class="invalid-feedback">
+                                            A quantidade deve ser no mínimo 1.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* Descrição dos itens pré-definidos da cesta *@
+                            <div class="col-md-6">
+                                <table class="table cesta-completa">
+                                    <thead>
+                                        <tr><th>Item</th><th>Quantidade</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Arroz branco</td><td>1kg</td></tr>
+                                        <tr><td>Feijão carioca</td><td>1kg</td></tr>
+                                        <tr><td>Macarrão</td><td>500g</td></tr>
+                                        <tr><td>Óleo de soja</td><td>900ml</td></tr>
+                                        <tr><td>Sal refinado</td><td>1kg</td></tr>
+                                        <tr><td>Goma de tapioca</td><td>90g</td></tr>
+                                        <tr><td>Farinha de trigo</td><td>1kg</td></tr>
+                                        <tr><td>Açúcar</td><td>1kg</td></tr>
+                                        <tr><td>Água mineral</td><td>2L</td></tr>
+                                        <tr><td>Café tradicional</td><td>250g</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                }
+
+                else
+                {
+                    @* Editar alimentos solitados *@
+                    <section id="sectionItensAvulsos">
+                        <h4 class="titulo-section-doacao col-12">Itens da doação</h4>
+                        <div class="row subsection-doacao">
+                            @* Adicionar alimentos a solicitar *@
+                            <h5 class="col-12 subtitulo-section-doacao">Selecione um alimento para solicitar</h5>
+                            <div class="col-12 add-opcao-itens">
+                                <div class="row input-row" id="addOpcaoItens">
+                                    <div class="form-group col-sm-4 col-md-3">
+                                        <label for="alimentoNaoPerecivel" class="control-label">Alimento</label>
+                                        <select id="alimentoNaoPerecivel" asp-items="Html.GetEnumSelectList<AlimentoNaoPerecivel>()" class="form-control form-select" aria-describedby="validacaoAlimento">
+                                            <option value="" disabled selected>Selecione...</option>
+                                        </select>
+                                        <div id="validacaoAlimento" class="invalid-feedback">
+                                            Selecione um alimento.
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6 col-sm-4 col-md-3">
+                                        <label for="qtdeItem" class="control-label">Quantidade</label>
+                                        <input id="qtdeItem" type="number" min="1" class="form-control" value="1" aria-describedby="validacaoQtde" />
+                                        <div id="validacaoQtde" class="invalid-feedback">
+                                            A quantidade deve ser no mínimo 1.
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6 col-sm-4 col-md-3">
+                                        <label for="medidaItem" class="control-label">Medida</label>
+                                        <select id="medidaItem" asp-items="Html.GetEnumSelectList<MedidaItem>()" class="form-control form-select" aria-describedby="validacaoMedida">
+                                            <option value="" disabled selected>Selecione...</option>
+                                        </select>
+                                        <div id="validacaoMedida" class="invalid-feedback">
+                                            Selecione uma medida.
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label class="control-label d-none d-md-block">&nbsp;</label>
+                                        <button type="button" id="btnAddItem" class="btn btn-secondary-app form-control">Adicionar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* Itens selecionados *@
+                            <div class="col-12 itens-selecionados">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Alimento</th>
+                                            <th>Quantidade</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listaItensDoacao">
+                                        @foreach (var item in Model.ItensSolicitacao)
+                                        {
+                                            <tr class="item-row" data-clientid="@item.ClientId" id="@item.Id">
+                                                <td>@item.Alimento.GetDisplayName()</td>
+                                                <td>@item.QtdeItem @item.MedidaItem</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger btn-sm remover-item">Remover</button>
+                                                    <input type="hidden" name="ItensSolicitacao[@item.ClientId].Alimento" value="@((int)item.Alimento)" />
+                                                    <input type="hidden" name="ItensSolicitacao[@item.ClientId].QtdeItem" value="@item.QtdeItem" />
+                                                    <input type="hidden" name="ItensSolicitacao[@item.ClientId].MedidaItem" value="@item.MedidaItem" />
+                                                    <input type="hidden" name="ItensSolicitacao[@item.ClientId].ClientId" value="@item.ClientId" />
+                                                    <input type="hidden" name="ItensSolicitacao.Index" value="@item.ClientId" />
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div id="listaItensVazia" class="d-none">
+                                    Você ainda não adicionou nenhum alimento para doar.
+                                </div>
+                                <div class="text-danger d-none" id="validacaoItens">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                    Você precisa adicionar pelo menos um item para doação.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                }
+                
+                <hr />
+
+                @* Editar informações da entrega *@
+                <section id="sectionInfoEntrega" class="section-doacao">
+                    <h4 class="titulo-section-doacao col-12">Informações para entrega da doação</h4>
+                    
+                    @* Editar tipo de entrega *@
+                    <div class="row subsection-doacao">
+                        <h5 class="col-12 subtitulo-section-doacao">Selecione a opção de entrega desejada</h5>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <label for="opcaoEntrega" class="form-check-label container-tipo-entrega">
+                                    <div>
+                                        <input type="radio" value="@TipoTransporte.Entrega" asp-for="TipoTransporte" id="opcaoEntrega" class="form-check-input" />
+                                    </div>
+                                    <div>
+                                        <div class="label-transporte">
+                                            @TipoTransporte.Entrega.GetDisplayName()
+                                        </div>
+                                        <div class="descricao-opcao">
+                                            O doador ficará responsável por entregar a doação no meu endereço.
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <label for="opcaoRetirada" class="form-check-label container-tipo-entrega">
+                                    <div>
+                                        <input type="radio" value="@TipoTransporte.Retirada" asp-for="TipoTransporte" id="opcaoRetirada" class="form-check-input" />
+                                    </div>
+                                    <div>
+                                        <div class="label-transporte">
+                                            @TipoTransporte.Retirada.GetDisplayName()
+                                        </div>
+                                        <div class="descricao-opcao">
+                                            Eu ficarei responsável por retirar a doação no endereço do doador.
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="TipoTransporte" class="col-12 text-danger"></span>
+                    </div>
+
+                    @* Adicionar opções agendamento da entrega *@
+                    <div class="row subsection-doacao">
+                        <h5 class="subtitulo-section-doacao col-12">Adicione opções para agendamento</h5>
+                        <div class="col-12 add-opcao-agendamento">
+                            <div class="row input-row" id="addOpcaoAgendamento">
+                                <div class="form-group col-sm-4 col-md-3">
+                                    <label for="diaDaSemana" class="control-label">Dia da semana</label>
+                                    <select id="diaDaSemana" class="form-control form-select" aria-describedby="validacaoDia">
+                                        <option value="" disabled>Selecione...</option>
+                                        @foreach (var dia in Enum.GetValues(typeof(DiaDaSemana)).Cast<DiaDaSemana>())
+                                        {
+                                            <option value="@dia">@dia.GetDisplayName()</option>
+                                        }
+                                    </select>
+                                    <div id="validacaoDia" class="invalid-feedback">
+                                        Selecione um dia da semana.
+                                    </div>
+                                </div>
+                                <div class="form-group col-6 col-sm-4 col-md-3">
+                                    <label for="horarioInicio" class="control-label">Horário de início</label>
+                                    <input id="horarioInicio" type="time" class="form-control" aria-describedby="validacaoHorarioInicio" />
+                                    <div id="validacaoHorarioInicio" class="invalid-feedback">
+                                        Selecione um horário.
+                                    </div>
+                                </div>
+                                <div class="form-group col-6 col-sm-4 col-md-3">
+                                    <label for="horarioFinal" class="control-label">Horário final</label>
+                                    <input id="horarioFinal" type="time" class="form-control" aria-describedby="validacaoHorarioFinal" />
+                                    <div id="validacaoHorarioFinal" class="invalid-feedback">
+                                        Selecione um horário.
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" id="btnAddAgendamento" class="btn btn-secondary-app form-control">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 opcoes-agendamento">
+                            <table class="table col-12">
+                                <thead>
+                                    <tr>
+                                        <th>Dia da semana</th>
+                                        <th>Horário</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaOpcoesAgendamento">
+                                    @foreach (var agendamento in Model.AgendamentosSolicitacao)
+                                    {
+                                        var stringDia = agendamento.DiaSemana;
+                                        DiaDaSemana enumDia = (DiaDaSemana)Enum.Parse(typeof(DiaDaSemana), stringDia);
+                                        <tr class="agendamento-row" id="@agendamento.Id" data-clientid="@agendamento.ClientId">
+                                            <td>@enumDia.GetDisplayName()</td>
+                                            <td>@agendamento.HorarioInicio.ToString(@"hh\:mm") - @agendamento.HorarioFim.ToString(@"hh\:mm")</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger remover-opcao">Remover</button>
+
+                                                <input type="hidden" name="AgendamentosSolicitacao[@agendamento.ClientId].DiaSemana" value="@agendamento.DiaSemana" />
+                                                <input type="hidden" name="AgendamentosSolicitacao[@agendamento.ClientId].HorarioInicio" value="@agendamento.HorarioInicio" />
+                                                <input type="hidden" name="AgendamentosSolicitacao[@agendamento.ClientId].HorarioFim" value="@agendamento.HorarioFim" />
+                                                <input type="hidden" name="AgendamentosSolicitacao[@agendamento.ClientId].ClientId" value="@agendamento.ClientId" />
+                                                <input type="hidden" name="AgendamentosSolicitacao.Index" value="@agendamento.ClientId" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="d-none" id="listaAgendaVazia">
+                                Você ainda não adicionou nenhuma opção de agendamento.
+                            </div>
+                            <div class="text-danger d-none" id="validacaoAgendamento">
+                                <i class="bi bi-exclamation-circle"></i>
+                                Você precisa oferecer pelo menos uma opção de agendamento.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="form-group">
+                    <input type="submit" value="Salvar alterações" class="btn btn-primary-app btn-cadastrar-oferta" />
+                </div>
+            </form>
+
+            <div class="opcao-cancelar">
+                <a asp-controller="SolicitacoesDoacao" asp-action="GerenciarSolicitacoes" class="link-app">Voltar para a lista</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            initItens();
+            initAgendamento();
+            removerInvalido();
+
+            //Adicionar item na solicitação
+            $('#btnAddItem').click(function () {
+                var alimentoSelecionado = $('#alimentoNaoPerecivel').val();
+                var qtdeSelecionada = parseInt($('#qtdeItem').val());
+                var medidaSelecionada = $('#medidaItem').val();
+
+                //Valida item, quantidade e medida antes de adicionar
+                if (alimentoSelecionado == null) {
+                    $('#alimentoNaoPerecivel').addClass('is-invalid');
+                }
+                if (qtdeSelecionada < 1) {
+                    $('#qtdeItem').addClass('is-invalid');
+                }
+                if (medidaSelecionada == null) {
+                    $('#medidaItem').addClass('is-invalid');
+                }
+
+                //Valores a serem enviados no POST
+                var itemDoacao = {
+                    Alimento: parseInt(alimentoSelecionado),
+                    QtdeItem: qtdeSelecionada,
+                    MedidaItem: parseInt(medidaSelecionada)
+                };
+
+                //POST AddItemSolicitacaoRow
+                $.ajax({
+                    url: '@Url.Action("AddItemSolicitacaoRow", "SolicitacoesDoacao")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(itemDoacao),
+                    success: function (html) {
+                        $('#listaItensDoacao').append(html);
+                        $('#listaItensVazia').addClass('d-none');
+                        initItens();
+                    },
+                    error: function (xhr) {
+                        console.error("Erro:", xhr.responseText);
+                    }
+                });
+            });
+
+            //Adicionar opção de agendamento da entrega
+            $('#btnAddAgendamento').click(function () {
+                var diaSelecionado = $('#diaDaSemana').val();
+                var horarioInicio = $('#horarioInicio').val();
+                var horarioFinal = $('#horarioFinal').val();
+
+                // Valida valores antes de adicionar
+                if (diaSelecionado == null) {
+                    $('#diaDaSemana').addClass('is-invalid');
+                }
+                if (horarioInicio == '') {
+                    $('#horarioInicio').addClass('is-invalid');
+                }
+                if (horarioFinal == '') {
+                    $('#horarioFinal').addClass('is-invalid');
+                }
+
+                //Valores a serem enviados no POST
+                var opcaoAgendamento = {
+                    DiaSemana: diaSelecionado,
+                    HorarioInicio: parseTimeInput(horarioInicio),
+                    HorarioFim: parseTimeInput(horarioFinal)
+                };
+
+                //POST AddOpcaoAgendamentoRow
+                $.ajax({
+                    url: '@Url.Action("AddOpcaoAgendamentoRow", "SolicitacoesDoacao")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(opcaoAgendamento),
+                    success: function (html) {
+                        $('#listaOpcoesAgendamento').append(html);
+                        $('#listaAgendaVazia').addClass('d-none');
+                        initAgendamento();
+                    },
+                    error: function (xhr) {
+                        console.error("Erro:", xhr.responseText);
+                    }
+                });
+            });
+
+            // Remove html do item
+            $('#listaItensDoacao').on('click', '.remover-item', function () {
+                $(this).closest('tr').remove();
+                if ($('.item-row').length == 0) {
+                    $('#listaItensVazia').removeClass('d-none');
+                }
+            });
+
+            // Remove html da opção de agendamento
+            $('#listaOpcoesAgendamento').on('click', '.remover-opcao', function () {
+                $(this).closest('tr').remove();
+                if ($('.agendamento-row').length == 0) {
+                    $('#listaAgendaVazia').removeClass('d-none');
+                }
+            });
+
+            // Verifica se todos os valores necessários foram preenchidos
+            $('#formEditSolicitacao').on('submit', function(e) {
+
+                //Oferta de itens contém pelo menos uma opção de item
+                if($('#IsCestaCompleta').val() == "false" && $('.item-row').length == 0) {
+                    e.preventDefault();
+                    $('#validacaoItens').removeClass('d-none');
+                }
+
+                //Oferta de cestas contém no mínimo 1 cesta
+                if($('#IsCestaCompleta').val() == "true" && parseInt($('#QtdeCestas').val()) < 1) {
+                    e.preventDefault();
+                    $('#QtdeCestas').addClass('is-invalid');
+                }
+
+                //Pelo menos uma opção de agendamento foi oferecida
+                if ($('.agendamento-row').length == 0) {
+                    e.preventDefault();
+                    $('#validacaoAgendamento').removeClass('d-none');
+                }
+            });
+
+            // Remove status de inválido quando input é inserido
+            function removerInvalido() {
+                $('.form-select').on('input', function() {
+                    if ($(this).val() != null) {
+                        $(this).removeClass('is-invalid');
+                    }
+                })
+
+                $('input[type=number').on('input', function() {
+                    if ($(this).val() >= 1) {
+                        $(this).removeClass('is-invalid');
+                    }
+                })
+
+                $('input[type=time]').on('input', function() {
+                    if ($(this).val() != '') {
+                        $(this).removeClass('is-invalid');
+                    }
+                })
+            }
+
+            // Formata Time Span
+            function parseTimeInput(timeStr) {
+                const parts = timeStr.split(':');
+                return `${parts[0]}:${parts[1]}:00`;
+            }
+
+            // Inicializa itens com valores vazios ou mínimo
+            function initItens() {
+                $('#alimentoNaoPerecivel').val('');
+                $('#qtdeItem').val(1);
+                $('#medidaItem').val('');
+            }
+            function initAgendamento() {
+                $('#diaDaSemana').val('');
+                $('#horarioInicio').val('');
+                $('#horarioFinal').val('');
+            }
+        });
+    </script>
+}

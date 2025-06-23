@@ -1,0 +1,37 @@
+﻿@model app.Models.SolicitacaoDoacao
+
+@{
+    ViewData["Title"] = "Cancelar Solicitação";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="rounded shadow-sm p-4 bg-white">
+                <h2 class="text-dark mb-3">Cancelar Solicitação de Doação</h2>
+
+                <p class="text-danger">
+                    Atenção: Esta ação é irreversível. Confirme o cancelamento informando uma justificativa.
+                </p>
+
+                <form asp-action="Cancelar" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <div class="mb-3">
+                        <label for="justificativaCancelamento" class="form-label">Justificativa do cancelamento</label>
+                        <textarea name="justificativaCancelamento" id="justificativaCancelamento" class="form-control" rows="4" required></textarea>
+                    </div>
+
+                    <div class="row grupo-btn">
+                        <div class="col-md-6">
+                            <a asp-action="GerenciarSolicitacoes" class="btn btn-outline-secondary">Voltar</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-danger">Confirmar Cancelamento</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

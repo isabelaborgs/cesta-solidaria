@@ -1,0 +1,20 @@
+﻿<div class="wrapper-tipo-doacao wrapper-tipo-oferta">
+    <div class="header">
+        <h2 class="title">Ofereça uma doação</h2>
+        <h5 class="subtitle">Qual tipo de doação você gostaria de oferecer?</h5>
+    </div>
+    <div class="row opcoes-doacao opcoes-oferta">
+        <div class="col-sm-6">
+            <a class="opcao-doacao opcao-oferta opcao-cesta" asp-controller="OfertasDoacao" asp-action="CriarOferta" asp-route-isCestaCompleta="true">
+                <i class="bi bi-box2-heart-fill"></i>
+                Cestas básicas completas
+            </a>
+        </div>
+        <div class="col-sm-6">
+            <a class="opcao-doacao opcao-oferta opcao-itens" asp-controller="OfertasDoacao" asp-action="CriarOferta" asp-route-isCestaCompleta="false">
+                <i class="bi bi-heart-fill"></i>
+                Itens não perecíveis
+            </a>
+        </div>
+    </div>
+</div>

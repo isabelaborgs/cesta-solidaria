@@ -1,0 +1,16 @@
+﻿@using app.Enums
+@using app.Extensions
+@model app.Models.ItemSolicitacao
+
+<tr class="item-row" data-clientid="@Model.ClientId">
+    <td>@Model.Alimento.GetDisplayName()</td>
+    <td>@Model.QtdeItem @Model.MedidaItem</td>
+    <td>
+        <button type="button" class="btn btn-danger btn-sm remover-item">Remover</button>
+        <input type="hidden" name="ItensSolicitacao[@Model.ClientId].Alimento" value="@((int)Model.Alimento)" />
+        <input type="hidden" name="ItensSolicitacao[@Model.ClientId].QtdeItem" value="@Model.QtdeItem" />
+        <input type="hidden" name="ItensSolicitacao[@Model.ClientId].MedidaItem" value="@Model.MedidaItem" />
+        <input type="hidden" name="ItensSolicitacao[@Model.ClientId].ClientId" value="@Model.ClientId" />
+        <input type="hidden" name="ItensSolicitacao.Index" value="@Model.ClientId" />
+    </td>
+</tr>

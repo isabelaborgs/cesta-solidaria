@@ -1,0 +1,49 @@
+﻿@model app.Models.UsuarioDoadorPf
+
+@{
+    ViewData["Title"] = "Minha conta";
+}
+
+<div class="row justify-content-center">
+    <div class="wrapper-user wrapper-details-user col-lg-8 col-xl-7">
+        <h1 class="page-title header-user header-details-user">
+            Minha conta
+        </h1>
+
+        <div class="container-form-user container-form-details-user align-items-center">
+            <form class="form-user form-details-user row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group col-12">
+                    <label asp-for="Nome" class="control-label default-label">Nome completo</label>
+                    <input asp-for="Nome" class="form-control" disabled readonly />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Cpf" class="control-label default-label">CPF</label>
+                    <input asp-for="Cpf" value="@string.Format("{0:000\\.000\\.000\\-00}", long.Parse(Model.Cpf))" class="form-control" disabled readonly />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="DataNascimento" class="control-label default-label">Data de nascimento</label>
+                    <input type="date" asp-for="DataNascimento" class="form-control" disabled readonly />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Telefone" class="control-label default-label">Telefone</label>
+                    <input asp-for="Telefone" value="@string.Format("{0:(00\\) 00000\\-0000}", long.Parse(Model.Telefone))" class="form-control" disabled readonly />
+                </div>
+
+                <partial name="_DetailsUsuarioPartial" model="@Model" />
+
+                <div class="form-group grupo-btn col-12">
+                    <a asp-action="Edit" class="btn btn-primary-app">Editar dados</a>
+                    <a asp-action="Delete" class="btn btn-secondary-app">Excluir conta</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
