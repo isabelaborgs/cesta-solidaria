@@ -33,3 +33,11 @@
     <label asp-for="Email" class="control-label default-label">E-mail</label>
     <input asp-for="Email" class="form-control" disabled readonly />
 </div>
+@* @if (Model.Id < 4)
+{
+    <div class="form-group col-12">
+        <div class="alert alert-warning" role="alert">
+            Você está usando uma conta com permissões limitadas para fins de demonstração e não poderá editar ou excluir o usuário.
+        </div>
+    </div>
+} *@

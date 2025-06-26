@@ -205,21 +205,21 @@ namespace app.Controllers
             return View(solicitacoes);
         }
 
-        [HttpGet]
-        [Authorize(Roles = "ONG")]
-        public async Task<IActionResult> Cancelar(int id)
-        {
-            var solicitacao = await _context.SolicitacoesDoacao.FindAsync(id);
-            if (solicitacao == null)
-                return NotFound();
+        //[HttpGet]
+        //[Authorize(Roles = "ONG")]
+        //public async Task<IActionResult> Cancelar(int id)
+        //{
+        //    var solicitacao = await _context.SolicitacoesDoacao.FindAsync(id);
+        //    if (solicitacao == null)
+        //        return NotFound();
 
-            return View(solicitacao);
-        }
+        //    return View(solicitacao);
+        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ONG")]
-        public async Task<IActionResult> Cancelar(int id, string justificativaCancelamento)
+        public async Task<IActionResult> Cancelar(int id)
         {
             var solicitacao = await _context.SolicitacoesDoacao.FindAsync(id);
             if (solicitacao == null || solicitacao.Status != Status.Pendente)
@@ -228,7 +228,7 @@ namespace app.Controllers
             }
             
             solicitacao.Status = Status.Cancelada;
-            solicitacao.JustificativaCancelamento = justificativaCancelamento;
+            solicitacao.DataConclusao = DateTime.Now;
             
             await _context.SaveChangesAsync();
 

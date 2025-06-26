@@ -70,8 +70,7 @@
                 @* Informações do cancelamento *@
                 <div class="agendamento-cancelado">
                     <h3 class="mb-3 text-danger"><i class="bi bi-x-circle-fill"></i> Agendamento cancelado</h3>
-                    <h5>Justificativa:</h5>
-                    @Model.JustificativaCancelamento
+                    <h5>@Model.JustificativaCancelamento em @Model.DataConclusao?.ToString("dd/MM/yyyy")</h5>
                 </div>
                 <div>
                     <a asp-action="ListarAgendamentos" class="btn btn-secondary-app">Voltar</a>
@@ -154,20 +153,19 @@
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <h3 class="text-danger mb-3">Cancelar agendamento</h3>
-                <h5>
-                    Atenção: Esta ação é irreversível. Confirme o cancelamento informando uma justificativa.
+            <div class="modal-body text-center">
+                <h3 class="text-danger mb-2">Cancelar agendamento</h3>
+                <h5 class="mb-3">
+                    Atenção: Esta ação é irreversível. Você tem certeza de que deseja cancelar este agendamento?
                 </h5>
                 <form asp-action="CancelarAgendamento" id="formCancelamento">
                     <input type="hidden" name="id" value="@Model.Id" />
-                    <textarea name="justificativaCancelamento" id="justificativaCancelamento" class="form-control mb-4" rows="4" required></textarea>
-                    <div class="grupo-btn row">
+                    <div class="grupo-btn row mb-3">
                         <div class="col">
-                            <input type="submit" value="Cancelar" class="btn btn-danger" />
+                            <input type="submit" value="Sim, quero cancelar" class="btn btn-danger" />
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-primary-outline-app" data-bs-dismiss="modal">Voltar</button>
+                            <button type="button" class="btn btn-primary-outline-app" data-bs-dismiss="modal">Não, voltar</button>
                         </div>
                     </div>
                 </form>

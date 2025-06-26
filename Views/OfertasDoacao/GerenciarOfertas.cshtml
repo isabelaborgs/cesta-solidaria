@@ -43,34 +43,60 @@
                         <div class="col-md-6 col-xl-4">
                             <div class="card card-doacao shadow-sm">
                                 <div class="card-body">
-                                    <h5 class="card-title mb-2">Oferta @oferta.Id</h5>
-                                    <p><strong>Status:</strong> @oferta.Status.ToString()</p>
-                                    <p><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
-                                    <p><strong>Data:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</p>
+                                    <div>
+                                        <h5 class="card-title mb-2">Oferta @oferta.Id</h5>
+                                        <h6 style="color: #F23005">Aguardando agendamento</h6>
+                                        <div><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</div>
+                                        <div><strong>Data da oferta:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</div>
 
-                                    @if (oferta.IsCestaCompleta)
-                                    {
-                                        <p><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</p>
-                                    }
-                                    else if (oferta.ItensOferta != null && oferta.ItensOferta.Any())
-                                    {
-                                        <strong>Itens:</strong>
-                                        <ul>
-                                            @foreach (var item in oferta.ItensOferta)
-                                            {
-                                                <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
-                                            }
-                                        </ul>
-                                    }
+                                        @if (oferta.IsCestaCompleta)
+                                        {
+                                            <div><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</div>
+                                        }
+                                        else if (oferta.ItensOferta != null && oferta.ItensOferta.Any())
+                                        {
+                                            var itensAgrupados = oferta.ItensOferta
+                                                .GroupBy(i => i.Alimento)
+                                                .Select(g => $"{g.Key.GetDisplayName()}")
+                                                .ToList();
+                                            var listaFormatada = string.Join(", ", itensAgrupados);
 
+                                            <div><strong>Itens:</strong> @listaFormatada</div>
+                                        }
+                                    </div>
                                     <!-- Botões -->
                                     <div class="d-flex flex-wrap gap-1 acoes-doacao">
                                         <a class="btn btn-sm btn-primary-app me-1" asp-action="Details" asp-route-id="@oferta.Id">Ver detalhes</a>
                                         <a class="btn btn-sm btn-primary-outline-app me-1" asp-action="Edit" asp-route-id="@oferta.Id">Editar</a>
-                                        <form asp-action="Cancelar" asp-route-id="@oferta.Id" method="post" class="d-inline">
-                                            <a class="btn btn-sm btn-secondary-app" asp-action="Cancelar" asp-route-id="@oferta.Id">
-                                                Cancelar
-                                            </a>
+                                        <button class="btn btn-sm btn-secondary-app" data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade modal-agendamento" id="modalCancelar" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body mb-3 text-center">
+                                        <h3 class="text-danger mb-3">Cancelar oferta</h3>
+                                        <h5 class="mb-4">
+                                            Atenção: Esta ação é irreversível. Você tem certeza de que deseja cancelar essa oferta?
+                                        </h5>
+                                        <form asp-action="Cancelar" id="formCancelamento">
+                                            <input type="hidden" name="id" value="@oferta.Id" />
+                                            <div class="grupo-btn row">
+                                                <div class="col">
+                                                    <input type="submit" value="Sim, tenho certeza" class="btn btn-danger" />
+                                                </div>
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-primary-outline-app" data-bs-dismiss="modal">Não, voltar</button>
+                                                </div>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -96,28 +122,24 @@
                             <div class="card card-doacao shadow-sm">
                                 <div class="card-body">
                                     <h5>Oferta @oferta.Id</h5>
-                                    <p><strong>Status:</strong> @oferta.Status.ToString()</p>
-                                    <p><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
-                                    <p><strong>Data:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</p>
+                                    <h6 class="text-danger">Cancelada</h6>
+                                    <div><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</div>
+                                    <div><strong>Data da oferta:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</div>
+                                    <div><strong>Data do cancelamento</strong> @oferta.DataConclusao?.ToString("dd/MM/yyyy HH:mm")</div>
 
                                     @if (oferta.IsCestaCompleta)
                                     {
-                                        <p><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</p>
+                                        <div><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</div>
                                     }
                                     else if (oferta.ItensOferta != null && oferta.ItensOferta.Any())
                                     {
-                                        <strong>Itens:</strong>
-                                        <ul>
-                                            @foreach (var item in oferta.ItensOferta)
-                                            {
-                                                <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
-                                            }
-                                        </ul>
-                                    }
+                                        var itensAgrupados = oferta.ItensOferta
+                                            .GroupBy(i => i.Alimento)
+                                            .Select(g => $"{g.Key.GetDisplayName()}")
+                                            .ToList();
+                                        var listaFormatada = string.Join(", ", itensAgrupados);
 
-                                    @if (!string.IsNullOrEmpty(oferta.JustificativaCancelamento))
-                                    {
-                                        <p><strong>Justificativa:</strong> @oferta.JustificativaCancelamento</p>
+                                        <div><strong>Itens:</strong> @listaFormatada</div>
                                     }
                                 </div>
                             </div>
@@ -142,23 +164,23 @@
                             <div class="card card-doacao shadow-sm">
                                 <div class="card-body">
                                     <h5>Oferta @oferta.Id</h5>
-                                    <p><strong>Status:</strong> @oferta.Status.ToString()</p>
-                                    <p><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</p>
-                                    <p><strong>Data:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</p>
+                                    <div><strong>Tipo:</strong> @(oferta.IsCestaCompleta ? "Cesta completa" : "Itens avulsos")</div>
+                                    <div><strong>Data da solicitação:</strong> @oferta.DataCadastro.ToString("dd/MM/yyyy HH:mm")</div>
+                                    <div><strong>Data da conclusão: </strong> @oferta.DataConclusao?.ToString("dd/MM/yyyy HH:mm")</div>
 
                                     @if (oferta.IsCestaCompleta)
                                     {
-                                        <p><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</p>
+                                        <div><strong>Quantidade de cestas:</strong> @oferta.QtdeCestas</div>
                                     }
                                     else if (oferta.ItensOferta != null && oferta.ItensOferta.Any())
                                     {
-                                        <strong>Itens:</strong>
-                                        <ul>
-                                            @foreach (var item in oferta.ItensOferta)
-                                            {
-                                                <li>@item.Alimento.GetDisplayName() - @item.QtdeItem @item.MedidaItem</li>
-                                            }
-                                        </ul>
+                                        var itensAgrupados = oferta.ItensOferta
+                                            .GroupBy(i => i.Alimento)
+                                            .Select(g => $"{g.Key.GetDisplayName()}")
+                                            .ToList();
+                                        var listaFormatada = string.Join(", ", itensAgrupados);
+
+                                        <div><strong>Itens:</strong> @listaFormatada</div>
                                     }
                                 </div>
                             </div>

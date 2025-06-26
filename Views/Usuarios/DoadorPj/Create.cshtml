@@ -16,6 +16,12 @@
             </h4>
         </div>
 
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <h5>Ambiente de Teste - Não insira dados reais!</h5>
+            Este é um ambiente de demonstração. Os dados são temporários (serão apagados ao reiniciar) e não possuem a segurança de um sistema real. Por favor, NÃO insira informações sensíveis ou pessoais verdadeiras.
+            Você pode fazer o <a asp-controller="Usuarios" asp-action="Login" class="alert-link">login</a> com uma conta de Doador Pessoa Física já cadastrada para teste, se preferir.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="container-form-user container-form-cadastro-user align-items-center">
             <form asp-action="CreateDoadorPj" class="form-user form-cadastro-user row">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>

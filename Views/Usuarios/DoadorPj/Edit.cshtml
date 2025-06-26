@@ -10,6 +10,11 @@
             Editar dados da conta
         </h1>
 
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <h5>Ambiente de Teste - Não insira dados reais!</h5>
+            Este é um ambiente de demonstração. Os dados são temporários (serão apagados ao reiniciar) e não possuem a segurança de um sistema real. Por favor, NÃO insira informações sensíveis ou pessoais verdadeiras.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="container-form-user container-form-edit-user align-items-center">
             <form asp-action="EditDoadorPj" class="form-user form-edit-user row">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>

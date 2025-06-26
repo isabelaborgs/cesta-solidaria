@@ -198,6 +198,13 @@ namespace app.Controllers
         public async Task<IActionResult> Edit()
         {
             var userId = CurrentUserId();
+            
+            if (userId < 4)
+            {   
+                TempData["Erro"] = "Não é permitido editar informações dos usuários da demonstração.";
+                return RedirectToAction("Details");
+            }
+
             var usuarioBase = await _context.Usuarios.FindAsync(userId);
 
             if (usuarioBase == null)
@@ -230,6 +237,12 @@ namespace app.Controllers
             if (id != usuarioDoadorPf.Id)
             {
                 return NotFound();
+            }
+
+            if (usuarioDoadorPf.Id < 4)
+            {
+                TempData["Erro"] = "Não é permitido editar informações dos usuários da demonstração.";
+                return RedirectToAction("Details");
             }
 
             if (ModelState.IsValid)
@@ -268,6 +281,12 @@ namespace app.Controllers
                 return NotFound();
             }
 
+            if (usuarioDoadorPj.Id < 4)
+            {
+                TempData["Erro"] = "Não é permitido editar informações dos usuários da demonstração.";
+                return RedirectToAction("Details");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -304,6 +323,12 @@ namespace app.Controllers
                 return NotFound();
             }
 
+            if (usuarioOng.Id < 4)
+            {
+                TempData["Erro"] = "Não é permitido editar informações dos usuários da demonstração.";
+                return RedirectToAction("Details");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -334,6 +359,14 @@ namespace app.Controllers
         //GET: Usuarios/Delete
         public IActionResult Delete()
         {
+            var userId = CurrentUserId();
+
+            if (userId < 4)
+            {
+                TempData["Erro"] = "Não é permitido excluir um usuário da demonstração.";
+                return RedirectToAction("Details");
+            }
+
             return View();
         }
 
@@ -343,6 +376,13 @@ namespace app.Controllers
         public async Task<IActionResult> DeleteConfirmed(string senha)
         {
             var userId = CurrentUserId();
+
+            if (userId < 4)
+            {
+                TempData["Erro"] = "Não é permitido excluir um usuário da demonstração.";
+                return RedirectToAction("Details");
+            }
+
             var usuario = await _context.Usuarios.FindAsync(userId);
 
             if (usuario == null)

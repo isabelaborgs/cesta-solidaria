@@ -12,7 +12,6 @@ namespace app.Models
 
         [Display(Name = "Dia da semana")]
         public string DiaSemana { get; set; }
-        public DiaDaSemana DiaDaSemana { get; set; }
 
         [Display(Name = "Horário inicial")]
         public TimeSpan HorarioInicio { get; set; }

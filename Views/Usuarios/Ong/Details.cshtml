@@ -10,6 +10,14 @@ ViewData["Title"] = "Minha conta";
             Minha conta
         </h1>
 
+        @if (Model.Id < 4)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Você está usando uma conta com permissões limitadas para fins de demonstração e não poderá editar ou excluir o usuário.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <div class="container-form-user container-form-details-user align-items-center">
             <form class="form-user form-details-user row">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -33,10 +41,20 @@ ViewData["Title"] = "Minha conta";
 
                 <partial name="_DetailsUsuarioPartial" model="@Model"/>
 
-                <div class="form-group grupo-btn col-12">
-                    <a asp-action="Edit" class="btn btn-primary-app">Editar dados</a>
-                    <a asp-action="Delete" class="btn btn-secondary-app">Excluir conta</a>
-                </div>
+                @if (Model.Id < 4)
+                {
+                    <div class="form-group grupo-btn col-12 mt-3">
+                            <a asp-action="Edit" class="btn btn-primary-app disabled">Editar dados</a>
+                            <a asp-action="Delete" class="btn btn-secondary-app disabled">Excluir conta</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group grupo-btn col-12">
+                        <a asp-action="Edit" class="btn btn-primary-app">Editar dados</a>
+                        <a asp-action="Delete" class="btn btn-secondary-app">Excluir conta</a>
+                    </div>
+                }
             </form>
         </div>
     </div>

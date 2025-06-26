@@ -1,12 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
+﻿using app.Enums;
 using app.ViewModels;
-using app.Enums;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace app.Models
 {
     [Table("Usuario")]
+    [JsonDerivedType(typeof(UsuarioDoadorPf), typeDiscriminator: "doadorpf")]
+    [JsonDerivedType(typeof(UsuarioDoadorPj), typeDiscriminator: "doadorpj")]
+    [JsonDerivedType(typeof(UsuarioOng), typeDiscriminator: "ong")]
     public abstract class Usuario
     {
         [Key]
@@ -17,7 +21,7 @@ namespace app.Models
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "Insira um número de telefone para prosseguir.")]
-        [StringLength(11, MinimumLength = 11, ErrorMessage ="O telefone deve conter 11 dígitos")]
+        [StringLength(11, MinimumLength = 10, ErrorMessage ="O telefone deve conter 10 ou 11 números")]
         [RegularExpression(@"^[0-9]+$", ErrorMessage = "O telefone deve conter apenas números.")]
         [DisplayName("Telefone")]
         public string Telefone { get; set; }
@@ -46,11 +50,13 @@ namespace app.Models
         public Estado Estado { get; set; }
 
         [Required(ErrorMessage = "Insira um e-mail para prosseguir.")]
+        [StringLength(50)]
         [EmailAddress(ErrorMessage = "E-mail em formato inválido.")]
         [DisplayName("E-mail")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Insira uma senha para prosseguir")]
+        [StringLength(50)]
         [DataType(DataType.Password)]
         [DisplayName("Senha")]
         public string Senha { get; set; }

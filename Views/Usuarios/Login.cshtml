@@ -6,6 +6,21 @@
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
 }
 
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <h5>Ambiente de Teste - Não insira dados reais!</h5>
+    Este é um ambiente de demonstração e não possui a segurança de um sistema real, <b>NÃO</b> insira informações sensíveis ou pessoais verdadeiras.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div class="alert alert-info alert-dismissible fade show mb-5" role="alert">
+    <h5>Usuários de teste</h5>
+    <div>Se preferir, você pode realizar o login com um de nossos usuários fictícios cadastrados para teste. Você não poderá editar ou excluir os dados do usuário, mas terá acesso a todas as outras funcionalidades da aplicação.</div>
+    <div><strong>Doador Pessoa Física: </strong>E-mail: doadorpf@demo.com | Senha: senha123</div>
+    <div><strong>Doador Pessoa Jurídica: </strong>E-mail: doadorpj@demo.com | Senha: senha123</div>
+    <div><strong>ONG: </strong>E-mail: ong@demo.com | Senha: senha123</div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
 <div class="row justify-content-center">
     <div class="wrapper-login col-md-8 col-lg-6 col-xl-5">
         @if (TempData["Sucesso"] != null)

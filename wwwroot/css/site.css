@@ -824,6 +824,11 @@ footer {
     color: black;
 }
 
+.wrapper-user .grupo-btn {
+    display: flex;
+    column-gap: 1rem;
+}
+
 .container-form-user {
     padding: 3rem;
     border-radius: 1.2rem;
@@ -1137,6 +1142,7 @@ footer {
     border-radius: 10px;
     padding: 0.5rem;
     padding-bottom: 1.5rem;
+    height: 100%;
 }
 
 .card-doacao .card-title {
@@ -1164,6 +1170,12 @@ footer {
 
 .card-doacao .acoes-doacao .btn {
     width: max-content;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .wrapper-doacao-disponivel {

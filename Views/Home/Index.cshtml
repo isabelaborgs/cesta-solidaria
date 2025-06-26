@@ -1,11 +1,30 @@
 ﻿@using app.Enums
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Página Inicial";
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
 }
 
-@* <section class="landing-section col-sm-10 col-md-9 col-lg-8 col-xl-6 mx-auto" id="sectionHero"> *@
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <h4><strong>Aviso Importante</strong>: Ambiente de Demonstração</h4>
+
+    <p>Esta aplicação foi desenvolvida como um projeto acadêmico no curso de Análise e Desenvolvimento de Sistemas da PUC Minas. 
+    A aplicação está utilizando dados fictícios para demonstração e NÃO é um ambiente de produção real. 
+    Os dados inseridos aqui são <b>armazenados temporariamente</b> apenas na memória do servidor e serão <b>permanentemente perdidos</b> a cada reinicialização da aplicação. 
+    Além disso, por ser um projeto acadêmico e uma versão de demonstração, ela não possui os mesmos níveis de segurança de um sistema real.
+    Por isso, NÃO insira informações pessoais sensíveis (como CPF, números de documentos, endereços completos ou senhas reais).</p>
+
+    <a href="https://github.com/isabelaborgs/cesta-solidaria" target="_blank" class="alert-link mt-3">
+        <h5 class="text-decoration-underline">
+            Saiba mais sobre o projeto
+            <i class="bi bi-box-arrow-up-right mx-2"></i>
+        </h5>
+        
+    </a>
+    
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
 <section class="landing-section row" id="sectionHero">
     <div class="col-sm-10 col-md-9 col-lg-8 col-xl-6 mx-auto hero-text">
         <img class="d-block mx-auto mx-xl-0 hero-icon" src="~/img/icone-logotipo.svg" alt="">

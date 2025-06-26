@@ -93,7 +93,7 @@
                        data-horarioInicio="@opcao.HorarioInicio"
                        data-horarioFinal="@opcao.HorarioFim" />
                 <span>
-                    @proximaData.ToString("dd/MM/yyyy") (@opcao.DiaSemana) - @opcao.HorarioInicio.ToString(@"hh\:mm") - @opcao.HorarioFim.ToString(@"hh\:mm")
+                    @proximaData.ToString("dd/MM/yyyy") (@enumDia.GetDisplayName()) - @opcao.HorarioInicio.ToString(@"hh\:mm") - @opcao.HorarioFim.ToString(@"hh\:mm")
                 </span>
             </label>
         </div>
@@ -109,7 +109,7 @@
                        data-horarioInicio="@opcao.HorarioInicio"
                        data-horarioFinal="@opcao.HorarioFim" />
                 <span>
-                    @segundaData.ToString("dd/MM/yyyy") (@opcao.DiaSemana) - @opcao.HorarioInicio.ToString(@"hh\:mm") - @opcao.HorarioFim.ToString(@"hh\:mm")
+                    @segundaData.ToString("dd/MM/yyyy") (@enumDia.GetDisplayName()) - @opcao.HorarioInicio.ToString(@"hh\:mm") - @opcao.HorarioFim.ToString(@"hh\:mm")
                 </span>
             </label>
         </div>

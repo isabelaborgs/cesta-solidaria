@@ -120,7 +120,7 @@ namespace app.Controllers
                 else if (transacao.TipoDoacao == TipoDoacao.Solicitacao)
                 {
                     var solicitacao = await _context.SolicitacoesDoacao.FindAsync(transacao.IdSolicitacao);
-                    //solicitacao.Status = Status.Confirmada;
+                    solicitacao.Status = Status.Confirmada;
                     _context.Update(solicitacao);
 
                     GerarNotificacao(transacao.IdOng, TipoNotificacao.SolicitacaoAceita);
@@ -204,7 +204,7 @@ namespace app.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CancelarAgendamento(int id, string justificativaCancelamento)
+        public async Task<IActionResult> CancelarAgendamento(int id)
         {
             //Atualiza status da transação e adiciona justificativa de cancelamento
             var transacao = await _context.Transacoes.FindAsync(id);
@@ -216,9 +216,10 @@ namespace app.Controllers
             var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var usuarioLogado = await _context.Usuarios.FindAsync(idUsuario);
 
-            var registroJustificativa = $"{usuarioLogado.Nome}: {justificativaCancelamento}";
+            var registroJustificativa = $"Agendamento cancelado por {usuarioLogado.Nome}";
 
             transacao.Status = Status.Cancelada;
+            transacao.DataConclusao = DateTime.Now; 
             transacao.JustificativaCancelamento = registroJustificativa;
 
             //Atualiza status da oferta ou solicitação de doação
@@ -231,7 +232,7 @@ namespace app.Controllers
             else if (transacao.TipoDoacao == TipoDoacao.Solicitacao)
             {
                 var solicitacao = await _context.SolicitacoesDoacao.FindAsync(transacao.IdSolicitacao);
-                //solicitacao.Status = Status.Pendente;
+                solicitacao.Status = Status.Pendente;
                 _context.Update(solicitacao);
             }
 
@@ -271,7 +272,7 @@ namespace app.Controllers
             else if (transacao.TipoDoacao == TipoDoacao.Solicitacao)
             {
                 var solicitacao = await _context.SolicitacoesDoacao.FindAsync(transacao.IdSolicitacao);
-                //solicitacao.Status = Status.Concluida;
+                solicitacao.Status = Status.Concluida;
                 solicitacao.DataConclusao = dataConclusao;
                 _context.Update(solicitacao);
             }

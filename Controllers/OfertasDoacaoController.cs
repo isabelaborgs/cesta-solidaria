@@ -187,7 +187,21 @@ namespace app.Controllers
             return View(ofertas);
         }
 
+        //[Authorize(Roles = "Doador")]
+        //public async Task<IActionResult> Cancelar(int id)
+        //{
+        //    var oferta = await _context.OfertasDoacao.FindAsync(id);
+        //    if (oferta == null || oferta.Status != Status.Pendente)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(oferta);
+        //}
+
         [Authorize(Roles = "Doador")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancelar(int id)
         {
             var oferta = await _context.OfertasDoacao.FindAsync(id);
@@ -196,22 +210,8 @@ namespace app.Controllers
                 return NotFound();
             }
 
-            return View(oferta);
-        }
-
-        [Authorize(Roles = "Doador")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Cancelar(int id, string justificativaCancelamento)
-        {
-            var oferta = await _context.OfertasDoacao.FindAsync(id);
-            if (oferta == null || oferta.Status != Status.Pendente)
-            {
-                return NotFound();
-            }
-
             oferta.Status = Status.Cancelada;
-            oferta.JustificativaCancelamento = justificativaCancelamento;
+            oferta.DataConclusao = DateTime.Now;
 
             _context.Update(oferta);
             await _context.SaveChangesAsync();

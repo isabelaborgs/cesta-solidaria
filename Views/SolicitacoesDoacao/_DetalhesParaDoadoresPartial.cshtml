@@ -52,11 +52,10 @@
                 <ul>
                     @foreach (var agendamento in Model.AgendamentosSolicitacao)
                     {
-                        @* var stringDia = agendamento.DiaSemana;
+                        var stringDia = agendamento.DiaSemana;
                         DiaDaSemana enumDia = (DiaDaSemana)Enum.Parse(typeof(DiaDaSemana), stringDia);
 
-                        <li>@enumDia.GetDisplayName() - das @agendamento.HorarioInicio.ToString(@"hh\:mm") até @agendamento.HorarioFim.ToString(@"hh\:mm")</li> *@
-                        <li>@agendamento.DiaSemana - das @agendamento.HorarioInicio.ToString(@"hh\:mm") até @agendamento.HorarioFim.ToString(@"hh\:mm")</li>
+                        <li>@enumDia.GetDisplayName() - das @agendamento.HorarioInicio.ToString(@"hh\:mm") até @agendamento.HorarioFim.ToString(@"hh\:mm")</li>
                     }
                 </ul>
             }

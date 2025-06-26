@@ -90,7 +90,8 @@
                 <ul>
                     @foreach (var horario in Model.AgendamentosSolicitacao)
                     {
-                        <li>@horario.DiaSemana - das @horario.HorarioInicio.ToString(@"hh\:mm") até @horario.HorarioFim.ToString(@"hh\:mm")</li>
+                        DiaDaSemana enumDia = (DiaDaSemana)Enum.Parse(typeof(DiaDaSemana), horario.DiaSemana);
+                        <li>@enumDia.GetDisplayName() - das @horario.HorarioInicio.ToString(@"hh\:mm") até @horario.HorarioFim.ToString(@"hh\:mm")</li>
                     }
                 </ul>
             }
