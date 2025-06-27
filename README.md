@@ -13,15 +13,14 @@ A **Cesta Solidária** é uma plataforma web desenvolvida para conectar **doador
     * [Funcionalidades para doadores](#funcionalidades-para-doadores)
     * [Funcionalidades para ONGs](#funcionalidades-para-ongs)
     * [Funcionalidades de transações de doações](#funcionalidades-de-transações-de-doações)
+* [Demonstração da solução](#demonstração-da-solução)
+* [Como acessar e utilizar](#como-acessar-e-utilizar)
 * [Arquitetura da solução](#arquitetura-da-solução)
     * [Diagrama de Classes](#diagrama-de-classes)
     * [Diagrama Entidade Relacionamento (ER)](#diagrama-entidade-relacionamento-er)
     * [Projeto do Banco de Dados](#projeto-do-banco-de-dados)
 * [Identidade visual](#identidade-visual)
-* [Demonstração da solução](#demonstração-da-solução)
-* [Como executar o projeto localmente](#como-executar-o-projeto-localmente)
-* [Acesso à plataforma](#acesso-à-plataforma)
-* [Contribuições](#contribuições)
+* [Contribuidores](#contribuidores)
 
 ## Ferramentas
 
@@ -42,8 +41,14 @@ A **Cesta Solidária** é uma plataforma web desenvolvida para conectar **doador
 - **C#**: linguagem de programação para implementar o back-end da aplicação.
 - **ASPNET Core MVC 8.0**: framework de desenvolvimento web utilizado.
 - **Entity Framework Core**: utilizado como ORM (Object-Relational Mapping).
-- **SQL Server**: banco de dados relacional utilizado.
+- **Azure SQL**: banco de dados relacional utilizado no projeto original.*
+- - **Provedor de Banco de Dados In-Memory para EF Core**: utilizado para demonstração pública da aplicação.**
+- **Azure App Service**: utilizado para implantação da aplicação.
 - **Git**: utilizado para versionamento do código.
+  
+**O Azure SQL foi utilizado com a licença de estudante no Azure, que fornece créditos limitados para uso acadêmico. Como não há mais créditos disponíveis, a versão da aplicação que utiliza a conexão com o Azure SQL não está ativa mais.* 
+
+***O BD In-Memory está sendo utilizado exclusivamente para demonstração da aplicação em portfólio. Essa opção foi escolhida por ser possível de implementar gratuitamente, simular diretamente o uso do EF Core, com fácil integração com o framework utilizado no desenvolvimento e por ser uma forma segura de demonstrar as funcionalidades.* 
 
 ## Funcionalidades
 
@@ -73,6 +78,41 @@ A **Cesta Solidária** é uma plataforma web desenvolvida para conectar **doador
 * **Gerenciar agendamentos**: os usuários podem visualizar os detalhes de todos os seus agendamentos (incluindo das doações que cadastrou e das doações que aceitou de outro usuário) de acordo com seu status (próximos, cancelados e concluídos), reagendar o horário, cancelar o agendamento e marcar uma entrega como concluída.
 * **Notificar alterações de agendamentos**: a aplicação notifica os usuários quando uma de suas doações cadastradas é aceita e agendada e quando algum de seus agendamentos tem alteração, seja por reagendamento, cancelamento ou conclusão. 
 
+## Demonstração da solução
+
+![mockup-cesta-solidaria](https://github.com/user-attachments/assets/4859ce79-fa6d-448f-82e7-776fb16b109e)
+
+<h4> A demonstração a seguir simula uma interação entre um doador e uma ONG do mesmo estado através da plataforma. </h4>
+
+https://github.com/user-attachments/assets/6d80bbb3-f683-4d92-abe5-089a444997a9
+
+## Como acessar e utilizar
+
+1. **Acesse a plataforma**: [clique aqui](https://cestasolidaria-hvdkhqg4a4enghc3.canadacentral-01.azurewebsites.net/) para acessar.
+
+2. **Cadastre-se (opcional)**: escolha uma das opções de cadastro (Doador Pessoa Física, Doador Pessoa Jurídica e ONG) e crie uma conta com dados fictícios. Você pode utilizar uma conta de teste já existente, se preferir (informações abaixo).
+
+3. **Faça login com a conta cadastrada ou use um dos usuários de teste**:
+   
+   | Tipo de perfil         | E-mail            | Senha    |
+   | ---------------------- | ----------------- | -------- |
+   | Doador Pessoa Física   | doadorpf@demo.com | senha123 |
+   | Doador Pessoa Jurídica | doadorpj@demo.com | senha123 |
+   | ONG                    | ong@demo.com      | senha123 |
+
+
+4. **Utilize as funcionalidades que desejar**:
+- Cadastre uma oferta ou solicitação de doação;
+- Visualize, edite ou cancela doações cadastradas por você;
+- Visualize as ofertas ou solicitações disponíveis em seu estado para aceite e agendamento;
+- Agende a entrega de uma oferta ou solicitação;
+- Visualize, reagende ou cancele um agendamento;
+- Marque uma doação como concluída;
+- Visualize, edite ou exclua a sua conta (As contas de teste têm permissão apenas de leitura e você não poderá alterar informações ou excluir a conta).
+
+> [!WARNING]
+> A demonstração pública utiliza o Provedor de Banco de Dados In-Memory para EF Core. Os dados inseridos são armazenados temporariamente apenas na memória do servidor e serão permanentemente perdidos a cada reinicialização da aplicação. Além disso, por ser um projeto acadêmico e uma versão de demonstração, ela não possui os mesmos níveis de segurança de um sistema real. Por isso, NÃO insira informações pessoais sensíveis (como CPF, números de documentos, endereços completos ou senhas reais) e tenha em mente que os dados serão eventualmente perdidos.
+
 ## Arquitetura da solução
 
 ### Diagrama de Classes
@@ -95,20 +135,7 @@ A **Cesta Solidária** é uma plataforma web desenvolvida para conectar **doador
 ### Paleta de cores
 ![Paleta de cores](https://github.com/user-attachments/assets/5798bea0-0f6c-4f4b-a594-b68c3c7a8697)
 
-## Demonstração da solução
-
-Em breve serão adicionados vídeos de demonstração da solução.
-
-## Como executar o projeto localmente
-
-Em breve serão adicionadas informações para executar o projeto localmente .
-
-## Acesso à plataforma 
-
-Em breve serão adicionadas informações de acesso.
-
-## Contribuições
-
+## Contribuidores
 Este projeto foi desenvolvido em grupo como parte das atividades acadêmicas do curso de Análise e Desenvolvimento de Sistemas. Os membros da equipe são:
 * Isabela Borges
 * Guilherme Moreira Leocadio | [GitHub](https://github.com/le0cadio)
@@ -118,5 +145,5 @@ Este projeto foi desenvolvido em grupo como parte das atividades acadêmicas do 
 Orientadora:
 * Rosilane Ribeiro da Mota
 
-Obs.: devido a políticas de segurança da PUC Minas, o repositório utilizado originalmente para documentação detalhada e desenvolvimento da aplicação, incluindo histórico completo de versionamento do código, não pode ser disponibilizado publicamente. 
+Devido a políticas de segurança da PUC Minas, o repositório utilizado originalmente para documentação detalhada e desenvolvimento da aplicação, incluindo histórico completo de versionamento do código, não pode ser disponibilizado publicamente. 
 
